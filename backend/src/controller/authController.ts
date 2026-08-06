@@ -14,7 +14,7 @@ const prisma = new PrismaClient({ adapter });
 
 export const login = (req: Request, res: Response) => {
   const state = Math.random().toString(36).substring(7);
-  const scope = 'user-read-private user-read-email user-top-read'; // Add required scopes
+  const scope = 'user-read-private user-read-email user-top-read';
   
   const queryParams = querystring.stringify({
     response_type: 'code',
@@ -53,7 +53,6 @@ export const callback = async (req: Request, res: Response) => {
     const { id, email, display_name, images } = userProfileResponse.data;
     const avatarUrl = images && images.length > 0 ? images[0].url : null;
 
-    // 2. Use Prisma to upsert the user into your database
     await prisma.user.upsert({
       where: { id },
       update: {
@@ -73,7 +72,7 @@ export const callback = async (req: Request, res: Response) => {
       },
     });
 
-    res.send('Success! User stored/updated in database.');
+    res.redirect('http://localhost:5173/dashboard');
   } catch (error) {
     console.error('Authentication error:', error);
     res.status(500).send('Authentication failed');
