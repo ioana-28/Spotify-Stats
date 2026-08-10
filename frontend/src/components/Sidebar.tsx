@@ -1,5 +1,6 @@
 import React from 'react';
 import { Home, Users, Disc3, ListMusic, Settings, User, Star } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';    
 
 const colors = {
   paper: '#FFF6E9',
@@ -30,22 +31,29 @@ function FontImport() {
 }
 
 const navItems = [
-  { label: 'Overview', icon: Home, color: colors.coral },
-  { label: 'Top Artists', icon: Users, color: colors.mint },
-  { label: 'Top Tracks', icon: ListMusic, color: colors.sunflower },
-  { label: 'Genres', icon: Disc3, color: colors.grape },
-  { label: 'Statistics', icon: Star, color: colors.sky },
+  { label: 'Overview', path:'/dashboard', icon: Home, color: colors.coral },
+  { label: 'Top Artists', path:'/dashboard', icon: Users, color: colors.mint },
+  { label: 'Top Tracks', path:'/dashboard', icon: ListMusic, color: colors.sunflower },
+  { label: 'Genres', path:'/dashboard', icon: Disc3, color: colors.grape },
+  { label: 'Statistics', path:'/stats', icon: Star, color: colors.sky },
    
 ];
 
 export default function Sidebar() {
-  const [activeItem, setActiveItem] = React.useState('Overview');  
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activeItem, setActiveItem] = React.useState(() =>
+    location.pathname === '/stats' ? 'Statistics' : 'Overview'
+  );
   return (
     <aside style={{
         backgroundColor: colors.panel,
         padding: '20px',
         display: 'flex',
         flexDirection: 'column',
+        position: 'sticky',
+        top: 0,
+        height: '100vh',
     }}
     >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '0 4px', marginBottom: 30 }}>
@@ -71,7 +79,7 @@ export default function Sidebar() {
             </div>
 
             <span style={{ color: colors.ink, fontFamily: fontDisplay, fontWeight: 600, fontSize: 18 }}>
-                Your App Name
+                Name 6769
             </span>
         </div>
 
@@ -81,12 +89,12 @@ export default function Sidebar() {
             gap: 10,
         }}
         >
-            {navItems.map(({ label, icon: Icon, color }) => {
+            {navItems.map(({ label, path, icon: Icon, color }) => {
                 const isActive = activeItem === label;
                 return (
                     <button
                         key={label}
-                        onClick={() => setActiveItem(label)}
+                        onClick={() => { setActiveItem(label); navigate(path); }}
                         style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -125,7 +133,7 @@ export default function Sidebar() {
         </nav>
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-           <div style={{ marginTop: 'auto', padding: '20px 0', borderTop: `1px solid ${colors.inkSoft}`, display: 'flex', alignItems: 'center', gap: 10 }}>
+           <div style={{ marginTop: 'auto', padding: '20px 0', borderTop: `1px solid ${colors.inkSoft}`, display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <button
                     style={{
                     display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px',
@@ -149,7 +157,7 @@ export default function Sidebar() {
           </div>
           <div style={{ overflow: 'hidden' }}>
             <div style={{ color: colors.ink, fontSize: 13, fontWeight: 800, whiteSpace: 'nowrap', fontFamily: fontBody }}>
-              Placeholder User
+              Test
             </div>
             <div style={{ color: colors.inkSoft, fontSize: 11, fontWeight: 600 }}>Spotify account</div>
           </div>
