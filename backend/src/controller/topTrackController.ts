@@ -19,12 +19,16 @@ export const getTopTracks = async (req: Request, res: Response) => {
             return res.status(401).json({ error: 'No user found. Please log in first.' });
         }
 
-        const response = await axios.get('https://api.spotify.com/v1/me/top/tracks?limit=10', {
+        const validTimeRanges = ['short_term', 'medium_term', 'long_term'];
+        const timeRange = validTimeRanges.includes(req.query.timeRange as string)
+            ? (req.query.timeRange as string)
+            : 'short_term';
+
+        const response = await axios.get(`https://api.spotify.com/v1/me/top/tracks?limit=10&time_range=${timeRange}`, {
             headers: { Authorization: `Bearer ${user.accessToken}` }
         });
 
         const spotifyTracks = response.data.items;
-        const timeRange = 'medium_term';
 
         const latestSnapshot = await prisma.snapshot.findFirst({
             where: { userId: user.id, timeRange },
@@ -36,7 +40,7 @@ export const getTopTracks = async (req: Request, res: Response) => {
             },
         });
 
-        let isSnapshotChanged = true;
+        let isSnapshotChanged = false;
         if (!latestSnapshot) {
             isSnapshotChanged = true;
         }

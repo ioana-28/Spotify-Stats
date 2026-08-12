@@ -3,14 +3,25 @@ import Sidebar from '../components/Sidebar';
 import { Star } from 'lucide-react';
 import { colors, fontDisplay, stickerShadow } from '../theme';
 
+type TimeRange = 'short_term' | 'medium_term' | 'long_term';
+
+const timeRangeOptions: { id: TimeRange; label: string }[] = [
+    { id: 'short_term', label: 'Past Month' },
+    { id: 'medium_term', label: 'Past 6 Months' },
+    { id: 'long_term', label: 'All Time' },
+];
+
+
 export default function TopTracks() {
     const [loading, setLoading] = useState(false);
     const [tracks, setTracks] = useState<any[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRange>('short_term');
+    
 
     useEffect(() => {
         setLoading(true);
-        fetch('http://localhost:5000/api/top-tracks')
+        fetch(`http://localhost:5000/api/top-tracks?timeRange=${selectedTimeRange}`)
         .then((res) => {
             if (!res.ok) throw new Error('Failed to fetch stats');
             return res.json();
@@ -23,7 +34,7 @@ export default function TopTracks() {
             setError(err.message);
             setLoading(false);
         });
-    }, []);
+    }, [selectedTimeRange]);
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh' }}>
@@ -50,6 +61,36 @@ export default function TopTracks() {
                             Fetched from Spotify API
                         </span>
                     </div>
+
+<div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
+                        {timeRangeOptions.map((option) => {
+                            const isActive = selectedTimeRange === option.id;
+                            return (
+                                <button
+                                    key={option.id}
+                                    onClick={() => setSelectedTimeRange(option.id)}
+                                    style={{
+                                        padding: '10px 20px',
+                                        borderRadius: 12,
+                                        border: `2px solid ${colors.ink}`,
+                                        backgroundColor: isActive ? colors.sunflower : colors.paper,
+                                        color: colors.ink,
+                                        fontFamily: fontDisplay,
+                                        fontWeight: 600,
+                                        fontSize: 14,
+                                        cursor: 'pointer',
+                                        boxShadow: isActive ? stickerShadow(2) : 'none',
+                                        transform: isActive ? 'translate(-1px, -1px)' : 'none',
+                                        transition: 'all 0.1s ease',
+                                    }}
+                                >
+                                    {option.label}
+                                </button>
+                            );
+                        })}
+
+                    </div>
+
 
                     {loading && <p style={{ color: colors.inkSoft, fontSize: 14 }}>Loading...</p>}
                     {error && <p style={{ color: colors.coral, fontSize: 14 }}>{error}</p>}
