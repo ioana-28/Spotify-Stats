@@ -1,26 +1,9 @@
 import React from 'react';
 import { Home, Users, Disc3, ListMusic, Settings, User, Star } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';    
-
-const colors = {
-  paper: '#FFF6E9',
-  panel: '#FFFFFF',
-  ink: '#221F1A',
-  inkSoft: '#6E685C',
-  coral: '#FF6F5E',
-  sunflower: '#FFC845',
-  mint: '#3ED9A5',
-  grape: '#A184E8',
-  sky: '#5BB8F0',
-}
+import { colors, fontDisplay, fontBody, stickerShadow } from '../theme';
 
 const palette = [colors.coral, colors.mint, colors.grape, colors.sunflower, colors.sky];
-
-const fontDisplay = "'Fredoka', ui-rounded, 'Segoe UI', sans-serif";
-const fontBody = "'Nunito', ui-rounded, 'Segoe UI', sans-serif";
-
-// Hard, un-blurred "sticker" shadow used everywhere for the comic feel
-const stickerShadow = (offset = 4) => `${offset}px ${offset}px 0px ${colors.ink}`;
 
 function FontImport() {
     return (
@@ -32,8 +15,8 @@ function FontImport() {
 
 const navItems = [
   { label: 'Overview', path:'/dashboard', icon: Home, color: colors.coral },
-  { label: 'Top Artists', path:'/dashboard', icon: Users, color: colors.mint },
-  { label: 'Top Tracks', path:'/dashboard', icon: ListMusic, color: colors.sunflower },
+  { label: 'Top Artists', path:'/top-artists', icon: Users, color: colors.mint },
+  { label: 'Top Tracks', path:'/top-tracks', icon: ListMusic, color: colors.sunflower },
   { label: 'Genres', path:'/dashboard', icon: Disc3, color: colors.grape },
   { label: 'Statistics', path:'/stats', icon: Star, color: colors.sky },
    
@@ -43,7 +26,9 @@ export default function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeItem, setActiveItem] = React.useState(() =>
-    location.pathname === '/stats' ? 'Statistics' : 'Overview'
+    location.pathname === '/stats' ? 'Statistics' :
+    location.pathname === '/top-artists' ? 'Top Artists' :
+    location.pathname === '/top-tracks' ? 'Top Tracks' : 'Overview'
   );
   return (
     <aside style={{
