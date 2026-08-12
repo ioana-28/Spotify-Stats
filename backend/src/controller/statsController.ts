@@ -14,7 +14,6 @@ export const getTopArtists = async (req: Request, res: Response) => {
         const user = await prisma.user.findFirst({
             orderBy: { createdAt: 'desc' },
         });
-        console.log('Retrieved user:', user);
 
         if (!user) {
             return res.status(401).json({ error: 'No user found. Please log in first.' });
@@ -23,47 +22,64 @@ export const getTopArtists = async (req: Request, res: Response) => {
         const response = await axios.get('https://api.spotify.com/v1/me/top/artists?limit=10', {
             headers: { Authorization: `Bearer ${user.accessToken}` }
         });
-        console.log('Top artists response:', response.data);
-        const topArtists = response.data.items.map((artist: any) => ({
-            id: artist.id,
-            name: artist.name,
-            image: artist.images,
-            genres: artist.genres
-        }));
-        res.json({ items: topArtists });
 
-        // const artist = response.data.items;
-        // const snapshot = await prisma.snapshot.create({
-        //     data: {
-        //         userId: user.id,
-        //         timeRange: 'medium_term',
-        //     },
-        // });
+        const spotifyArtists = response.data.items;
+        const timeRange = 'medium_term';
 
-        // const artistData = artist.map((artist: any, index: number) =>
-        //     prisma.topArtist.create({
-        //         data: {
-        //             snapshotId: snapshot.id,
-        //             spotifyId: artist.id,
-        //             name: artist.name,
-        //             genres: artist.genres,
-        //             imageUrl: artist.images?.[0]?.url || null,
-        //             rank: index + 1,
-        //         }
-        //     })
-        // );
+        const latestSnapshot = await prisma.snapshot.findFirst({
+            where: { userId: user.id, timeRange },
+            orderBy: { createdAt: 'desc' },
+            include: {
+                artists: {
+                    orderBy: { rank: 'asc' },
+                },
+            },
+        });
 
-        // await Promise.all(artistData);
-        // const savedArtists = await prisma.topArtist.findMany({
-        //     where: { snapshotId: snapshot.id },
-        //     orderBy: { rank: 'asc' },
-        // });
+        let isSnapshotChanged = true;
+        if (!latestSnapshot) {
+            isSnapshotChanged = true;
+        }
+        else if(latestSnapshot.artists.length !== spotifyArtists.length) {
+            isSnapshotChanged = true;
+        }
+        else {
+            isSnapshotChanged = spotifyArtists.some((artist: any, index: number) => {
+                const savedArtist = latestSnapshot.artists[index];
+                return !savedArtist || savedArtist.spotifyId !== artist.id;
+            });
+        }
 
-        // res.json({ items: savedArtists });
+        let activeSnapshot = latestSnapshot;
+
+        if (isSnapshotChanged) {
+            activeSnapshot = await prisma.snapshot.create({
+                data: {
+                    userId: user.id,
+                    timeRange,
+                    artists: {
+                        create: spotifyArtists.map((artist: any, index: number) => ({
+                            spotifyId: artist.id,
+                            name: artist.name,
+                            genres: artist.genres,
+                            imageUrl: artist.images?.[0]?.url || null,
+                            rank: index + 1,
+                        })),
+                    },
+                },
+                include: {
+                    artists: {
+                        orderBy: { rank: 'asc' },
+                    },
+                },
+            });
+        }
+
+        // Return the artists from the active (latest or newly created) snapshot
+        res.json({ items: activeSnapshot?.artists || [] });
     }
     catch (error) {
-        console.error('Error fetching top artists:', error);
+        console.error('Error fetching and saving top artists:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
-}
-
+};

@@ -144,9 +144,9 @@ export default function Statistics() {
                                         {i < 3 ? <Star size={14} fill={colors.ink} strokeWidth={0} /> : i + 1}
                                     </div>
 
-                                    {artist.image?.[0]?.url ? (
+                                    {artist.imageUrl ? (
                                         <img
-                                            src={artist.image[0].url}
+                                            src={artist.imageUrl}
                                             alt={artist.name}
                                             style={{
                                                 width: 50,
