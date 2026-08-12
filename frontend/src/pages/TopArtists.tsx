@@ -3,6 +3,7 @@ import Sidebar from '../components/Sidebar';
 import { Star } from 'lucide-react';
 import { colors, fontDisplay, stickerShadow } from '../theme';
 
+
 export default function TopArtists() {
     const [loading, setLoading] = useState(false);
     const [artists, setArtists] = useState<any[]>([]);
@@ -46,10 +47,8 @@ export default function TopArtists() {
                         <h2 style={{ color: colors.ink, fontFamily: fontDisplay, fontSize: 22, fontWeight: 600, margin: 0 }}>
                             Top Artists
                         </h2>
-                        <span style={{ color: colors.inkSoft, fontSize: 14, fontWeight: 700 }}>
-                            Fetched from Spotify API
-                        </span>
                     </div>
+
 
                     {loading && <p style={{ color: colors.inkSoft, fontSize: 14 }}>Loading...</p>}
                     {error && <p style={{ color: colors.coral, fontSize: 14 }}>{error}</p>}
