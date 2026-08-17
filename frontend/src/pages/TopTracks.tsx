@@ -5,6 +5,16 @@ import { colors, fontDisplay, stickerShadow } from '../theme';
 
 type TimeRange = 'short_term' | 'medium_term' | 'long_term';
 
+interface Track {
+  id?: string;
+  spotifyId: string;
+  name: string;
+  artist: string;
+  album: string;
+  imageUrl: string | null;
+  rank: number;
+}
+
 const timeRangeOptions: { id: TimeRange; label: string }[] = [
     { id: 'short_term', label: 'Past Month' },
     { id: 'medium_term', label: 'Past 6 Months' },
@@ -13,27 +23,39 @@ const timeRangeOptions: { id: TimeRange; label: string }[] = [
 
 
 export default function TopTracks() {
-    const [loading, setLoading] = useState(false);
-    const [tracks, setTracks] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [tracks, setTracks] = useState<Track[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRange>('short_term');
     
 
     useEffect(() => {
-        setLoading(true);
-        fetch(`http://localhost:5000/api/top-tracks?timeRange=${selectedTimeRange}`)
-        .then((res) => {
-            if (!res.ok) throw new Error('Failed to fetch stats');
-            return res.json();
-        })
-        .then((data) => {
-            setTracks(data.items);
-            setLoading(false);
-        })
-        .catch((err) => {
-            setError(err.message);
-            setLoading(false);
+        let ignore = false;
+
+        Promise.resolve().then(() => {
+            if (!ignore) setLoading(true);
         });
+
+        fetch(`http://localhost:5000/api/top-tracks?timeRange=${selectedTimeRange}`)
+            .then((res) => {
+                if (!res.ok) throw new Error('Failed to fetch stats');
+                return res.json();
+            })
+            .then((data: { items: Track[] }) => {
+                if (ignore) return;
+                setTracks(data.items);
+                setError(null);
+            })
+            .catch((err) => {
+                if (!ignore) setError(err.message);
+            })
+            .finally(() => {
+                if (!ignore) setLoading(false);
+            });
+
+        return () => {
+            ignore = true;
+        };
     }, [selectedTimeRange]);
 
     return (

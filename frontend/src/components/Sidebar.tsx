@@ -3,16 +3,6 @@ import { Home, Users, Disc3, ListMusic, Settings, User, Star } from 'lucide-reac
 import { useNavigate, useLocation } from 'react-router-dom';    
 import { colors, fontDisplay, fontBody, stickerShadow } from '../theme';
 
-const palette = [colors.coral, colors.mint, colors.grape, colors.sunflower, colors.sky];
-
-function FontImport() {
-    return (
-    <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap');
-    `}</style>
-  );
-}
-
 const navItems = [
   { label: 'Overview', path:'/dashboard', icon: Home, color: colors.coral },
   { label: 'Top Artists', path:'/top-artists', icon: Users, color: colors.mint },

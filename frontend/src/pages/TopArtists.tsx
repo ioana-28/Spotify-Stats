@@ -3,28 +3,57 @@ import Sidebar from '../components/Sidebar';
 import { Star } from 'lucide-react';
 import { colors, fontDisplay, stickerShadow } from '../theme';
 
+type TimeRange = 'short_term' | 'medium_term' | 'long_term';
+
+interface Artist {
+  id?: string;
+  spotifyId: string;
+  name: string;
+  genres: string[];
+  imageUrl: string | null;
+  rank: number;
+}
+
+const timeRangeOptions: { id: TimeRange; label: string }[] = [
+    { id: 'short_term', label: 'Past Month' },
+    { id: 'medium_term', label: 'Past 6 Months' },
+    { id: 'long_term', label: 'All Time' },
+];
 
 export default function TopArtists() {
-    const [loading, setLoading] = useState(false);
-    const [artists, setArtists] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [artists, setArtists] = useState<Artist[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRange>('short_term');
 
     useEffect(() => {
-        setLoading(true);
-        fetch('http://localhost:5000/api/top-artists')
-        .then((res) => {
-            if (!res.ok) throw new Error('Failed to fetch stats');
-            return res.json();
-        })
-        .then((data) => {
-            setArtists(data.items);
-            setLoading(false);
-        })
-        .catch((err) => {
-            setError(err.message);
-            setLoading(false);
+        let ignore = false;
+
+        Promise.resolve().then(() => {
+            if (!ignore) setLoading(true);
         });
-    }, []);
+
+        fetch(`http://localhost:5000/api/top-artists?timeRange=${selectedTimeRange}`)
+            .then((res) => {
+                if (!res.ok) throw new Error('Failed to fetch stats');
+                return res.json();
+            })
+            .then((data: { items: Artist[] }) => {
+                if (ignore) return;
+                setArtists(data.items);
+                setError(null);
+            })
+            .catch((err) => {
+                if (!ignore) setError(err.message);
+            })
+            .finally(() => {
+                if (!ignore) setLoading(false);
+            });
+
+        return () => {
+            ignore = true;
+        };
+    }, [selectedTimeRange]);
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh' }}>
@@ -47,6 +76,37 @@ export default function TopArtists() {
                         <h2 style={{ color: colors.ink, fontFamily: fontDisplay, fontSize: 22, fontWeight: 600, margin: 0 }}>
                             Top Artists
                         </h2>
+                        <span style={{ color: colors.inkSoft, fontSize: 14, fontWeight: 700 }}>
+                            Fetched from Spotify API
+                        </span>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
+                        {timeRangeOptions.map((option) => {
+                            const isActive = selectedTimeRange === option.id;
+                            return (
+                                <button
+                                    key={option.id}
+                                    onClick={() => setSelectedTimeRange(option.id)}
+                                    style={{
+                                        padding: '10px 20px',
+                                        borderRadius: 12,
+                                        border: `2px solid ${colors.ink}`,
+                                        backgroundColor: isActive ? colors.sunflower : colors.paper,
+                                        color: colors.ink,
+                                        fontFamily: fontDisplay,
+                                        fontWeight: 600,
+                                        fontSize: 14,
+                                        cursor: 'pointer',
+                                        boxShadow: isActive ? stickerShadow(2) : 'none',
+                                        transform: isActive ? 'translate(-1px, -1px)' : 'none',
+                                        transition: 'all 0.1s ease',
+                                    }}
+                                >
+                                    {option.label}
+                                </button>
+                            );
+                        })}
                     </div>
 
 
