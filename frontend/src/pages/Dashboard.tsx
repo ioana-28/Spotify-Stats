@@ -61,9 +61,6 @@ export default function Dashboard() {
           <h1 style={{ color: colors.ink, fontFamily: fontDisplay, fontSize: 32, fontWeight: 700, margin: 0 }}>
             Dashboard
           </h1>
-          <p style={{ color: colors.inkSoft, fontSize: 15, fontWeight: 700, margin: '6px 0 0' }}>
-            Your monthly snapshot: Top 3 artists & tracks over the past 4 weeks.
-          </p>
         </div>
 
         {loading && <p style={{ color: colors.inkSoft, fontWeight: 700 }}>Loading your monthly highlights...</p>}

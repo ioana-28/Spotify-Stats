@@ -79,9 +79,6 @@ export default function TopTracks() {
                         <h2 style={{ color: colors.ink, fontFamily: fontDisplay, fontSize: 22, fontWeight: 600, margin: 0 }}>
                             Top Tracks
                         </h2>
-                        <span style={{ color: colors.inkSoft, fontSize: 14, fontWeight: 700 }}>
-                            Fetched from Spotify API
-                        </span>
                     </div>
 
 <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
