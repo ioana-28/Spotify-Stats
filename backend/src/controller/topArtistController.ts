@@ -9,6 +9,34 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
+const getArtistGenres = async (artist: string): Promise<string[]> => {
+    try {
+        const response = await axios.get("https://ws.audioscrobbler.com/2.0/", {
+            params: {
+                method: "artist.gettoptags",
+                artist: artist,
+                api_key: process.env.LASTFM_API_KEY,
+                format: "json",
+                autocorrect: 1,
+            },
+            headers: {
+                "User-Agent": "StatsApp/1.0.0", // Last.fm recommends including your app name
+            },
+            timeout: 5000,
+        });
+
+        const tags = response.data.toptags?.tag;
+        if(!Array.isArray(tags)) {
+            return [];
+        }
+        return tags.slice(0, 3).map((tag: any) => tag.name);
+    }
+    catch (error) {
+        return [];
+    }
+}
+
+
 export const getTopArtists = async (req: Request, res: Response) => {
     try {
         const user = await prisma.user.findFirst({
@@ -60,18 +88,27 @@ export const getTopArtists = async (req: Request, res: Response) => {
         let activeSnapshot = latestSnapshot;
 
         if (isSnapshotChanged) {
+            const enrichedArtists = await Promise.all(
+                spotifyArtists.map(async (artist: any, index: number) => {
+                    let genres = Array.isArray(artist.genres) && artist.genres.length > 0
+                        ? artist.genres
+                        : await getArtistGenres(artist.name);
+
+                    return {
+                        spotifyId: artist.id,
+                        name: artist.name,
+                        genres: genres,
+                        imageUrl: artist.images?.[0]?.url || null,
+                        rank: index + 1,
+                    };
+                })
+            );
             activeSnapshot = await prisma.snapshot.create({
                 data: {
                     userId: user.id,
                     timeRange,
                     artists: {
-                        create: spotifyArtists.map((artist: any, index: number) => ({
-                            spotifyId: artist.id,
-                            name: artist.name,
-                            genres: artist.genres,
-                            imageUrl: artist.images?.[0]?.url || null,
-                            rank: index + 1,
-                        })),
+                        create: enrichedArtists,
                     },
                     ...(latestSnapshot?.tracks?.length
                         ? {

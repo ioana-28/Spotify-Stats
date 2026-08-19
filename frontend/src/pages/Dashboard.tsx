@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import { Mic2, Music, Star } from 'lucide-react';
 import { colors, fontDisplay, stickerShadow } from '../theme';

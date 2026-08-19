@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { colors, fontBody } from '../theme';
 import {
     injectStatsStylesOnce,
     timeRangeOptions,
@@ -9,9 +10,16 @@ import {
     EmptyMessage,
     PodiumRow,
     StatsList,
-    MetaLine,
 } from '../assets/StatsShared';
 import type { TimeRange, StatsItem } from '../assets/StatsShared';
+
+function MetaLine({ children }: { children: React.ReactNode }) {
+    return (
+        <span style={{ color: colors.inkSoft, fontSize: 13, fontFamily: fontBody, fontWeight: 700 }}>
+            {children}
+        </span>
+    );
+}
 
 interface Track {
     id?: string;

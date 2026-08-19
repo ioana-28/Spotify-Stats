@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Music2 } from 'lucide-react';
 import { colors, fontDisplay, fontBody, stickerShadow } from '../theme';
 import { injectStatsStylesOnce } from '../assets/StatsShared';
