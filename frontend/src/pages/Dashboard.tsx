@@ -52,7 +52,7 @@ export default function Dashboard() {
 
 
     return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: colors.paper }}>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: colors.ink }}>
       <Sidebar />
 
       <main style={{ flex: 1, padding: '36px 40px', boxSizing: 'border-box', maxWidth: 960, margin: '0 auto' }}>
