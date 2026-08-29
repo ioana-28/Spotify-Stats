@@ -7,7 +7,7 @@ const navItems = [
   { label: 'Overview', path:'/dashboard', icon: Home, color: colors.coral },
   { label: 'Top Artists', path:'/top-artists', icon: Users, color: colors.sky },
   { label: 'Top Tracks', path:'/top-tracks', icon: ListMusic, color: colors.sunflower },
-  { label: 'Genres', path:'/dashboard', icon: Disc3, color: colors.grape },
+  { label: 'Genres', path:'/top-genres', icon: Disc3, color: colors.grape },
   { label: 'Statistics', path:'/stats', icon: Star, color: colors.mint },
    
 ];
