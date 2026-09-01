@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { colors, fontBody } from '../theme';
 import {
     injectStatsStylesOnce,
     timeRangeOptions,
@@ -9,9 +10,59 @@ import {
     EmptyMessage,
     PodiumRow,
     StatsList,
-    Pills,
 } from '../assets/StatsShared';
 import type { TimeRange, StatsItem } from '../assets/StatsShared';
+import LogoutButton from '../components/LogoutButton';
+
+const pillPalette = [colors.coral, colors.sky, colors.mint, colors.grape, colors.sunflower];
+
+function formatGenre(genre: string) {
+    return genre.replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function Pills({ items }: { items: string[] }) {
+    if (!items || items.length === 0) {
+        return (
+            <span
+                style={{
+                    fontFamily: fontBody,
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: colors.inkSoft,
+                    padding: '3px 9px',
+                    borderRadius: 999,
+                    border: `1.5px dashed ${colors.inkSoft}`,
+                    whiteSpace: 'nowrap',
+                }}
+            >
+                No genres listed
+            </span>
+        );
+    }
+
+    return (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'inherit' }}>
+            {items.slice(0, 2).map((item, i) => (
+                <span
+                    key={item}
+                    style={{
+                        fontFamily: fontBody,
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: colors.ink,
+                        padding: '3px 9px',
+                        borderRadius: 999,
+                        border: `1.5px solid ${colors.ink}`,
+                        backgroundColor: `${pillPalette[i % pillPalette.length]}55`,
+                        whiteSpace: 'nowrap',
+                    }}
+                >
+                    {formatGenre(item)}
+                </span>
+            ))}
+        </div>
+    );
+}
 
 interface Artist {
     id?: string;
@@ -45,8 +96,12 @@ export default function TopArtists() {
         setLoading(true);
         setError(null);
 
-        fetch(`http://localhost:5000/api/top-artists?timeRange=${selectedTimeRange}`)
+        fetch(`http://localhost:5000/api/top-artists?timeRange=${selectedTimeRange}`, { credentials: 'include' })
             .then((res) => {
+                if (res.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
                 if (!res.ok) throw new Error('Failed to fetch stats');
                 return res.json();
             })
@@ -82,6 +137,7 @@ export default function TopArtists() {
 
     return (
         <StatsPageShell>
+            <LogoutButton />
             <StatsHeader
                 titlePrefix="Top"
                 highlightWord="Artists"

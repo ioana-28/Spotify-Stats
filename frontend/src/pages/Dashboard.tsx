@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import { Mic2, Music, Star } from 'lucide-react';
 import { colors, fontDisplay, stickerShadow } from '../theme';
-
+import LogoutButton from '../components/LogoutButton';
 
 
 interface TopArtist {
@@ -35,8 +35,12 @@ export default function Dashboard() {
     const [error, setError] = useState<string | null>(null);  
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/dashboard')
+        fetch('http://localhost:5000/api/dashboard', { credentials: 'include' })
             .then((res) => {
+                if (res.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
                 if (!res.ok) throw new Error('Failed to fetch dashboard data');
                 return res.json();
             })
@@ -52,11 +56,12 @@ export default function Dashboard() {
 
 
     return (
+      <>
+    <LogoutButton />
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: colors.ink }}>
       <Sidebar />
 
       <main style={{ flex: 1, padding: '36px 40px', boxSizing: 'border-box', maxWidth: 960, margin: '0 auto' }}>
-        {/* Header */}
         <div style={{ marginBottom: 28 }}>
           <h1 style={{ color: colors.ink, fontFamily: fontDisplay, fontSize: 32, fontWeight: 700, margin: 0 }}>
             Dashboard
@@ -118,7 +123,6 @@ export default function Dashboard() {
                         backgroundColor: colors.paper,
                       }}
                     >
-                      {/* Rank Star Badge */}
                       <div
                         style={{
                           width: 34,
@@ -330,5 +334,6 @@ export default function Dashboard() {
         )}
       </main>
     </div>
+    </>
   );
 }

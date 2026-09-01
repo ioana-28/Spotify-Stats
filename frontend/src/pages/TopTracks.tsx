@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { colors, fontBody } from '../theme';
 import {
     injectStatsStylesOnce,
     timeRangeOptions,
@@ -9,9 +10,17 @@ import {
     EmptyMessage,
     PodiumRow,
     StatsList,
-    MetaLine,
 } from '../assets/StatsShared';
 import type { TimeRange, StatsItem } from '../assets/StatsShared';
+import LogoutButton from '../components/LogoutButton';
+
+function MetaLine({ children }: { children: React.ReactNode }) {
+    return (
+        <span style={{ color: colors.inkSoft, fontSize: 13, fontFamily: fontBody, fontWeight: 700 }}>
+            {children}
+        </span>
+    );
+}
 
 interface Track {
     id?: string;
@@ -46,8 +55,12 @@ export default function TopTracks() {
         setLoading(true);
         setError(null);
 
-        fetch(`http://localhost:5000/api/top-tracks?timeRange=${selectedTimeRange}`)
+        fetch(`http://localhost:5000/api/top-tracks?timeRange=${selectedTimeRange}`, { credentials: 'include' })
             .then((res) => {
+                if (res.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
                 if (!res.ok) throw new Error('Failed to fetch stats');
                 return res.json();
             })
@@ -83,6 +96,7 @@ export default function TopTracks() {
 
     return (
         <StatsPageShell>
+            <LogoutButton />
             <StatsHeader
                 titlePrefix="Top"
                 highlightWord="Tracks"

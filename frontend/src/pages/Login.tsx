@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Music2 } from 'lucide-react';
 import { colors, fontDisplay, fontBody, stickerShadow } from '../theme';
 import { injectStatsStylesOnce } from '../assets/StatsShared';
@@ -119,7 +119,7 @@ export default function SpotifyLogin() {
     }, []);
 
     const handleConnect = () => {
-        window.location.href = 'http://127.0.0.1:5000/api/auth/login';
+        window.location.href = 'http://localhost:5000/api/auth/login';
     };
 
     return (

@@ -5,6 +5,7 @@ import querystring from 'querystring';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import pkg from 'pg';
+import { SESSION_COOKIE, getSessionUser } from '../lib/session.js';
 
 const { Pool } = pkg;
 
@@ -72,9 +73,56 @@ export const callback = async (req: Request, res: Response) => {
       },
     });
 
-    res.redirect('http://localhost:5173/dashboard');
+    res.redirect(`http://localhost:5000/api/auth/session?userId=${encodeURIComponent(id)}`);
   } catch (error) {
     console.error('Authentication error:', error);
     res.status(500).send('Authentication failed');
+  }
+};
+
+export const establishSession = (req: Request, res: Response) => {
+  const userId = req.query.userId as string;
+
+  if (!userId) {
+    return res.status(400).send('Missing user id');
+  }
+
+  res.cookie(SESSION_COOKIE, userId, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: false,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  });
+
+  res.redirect('http://localhost:5173/dashboard');
+};
+
+export const logout = async (req: Request, res: Response) => {
+  try {
+    res.clearCookie(SESSION_COOKIE, { httpOnly: true, sameSite: 'lax', secure: false });
+    return res.status(200).send('Logged out successfully');
+  }
+  catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).send('Logout failed');
+  }
+};
+
+export const getMe = async (req: Request, res: Response) => {
+  try {
+    const user = await getSessionUser(req, prisma);
+    if (!user) {
+      return res.status(401).json({ error: 'No user found. Please log in first.' });
+    }
+    return res.json({
+      id: user.id,
+      email: user.email,
+      displayName: user.displayName,
+      avatarUrl: user.avatarUrl,
+    });
+  }
+  catch (error) {
+    console.error('Error fetching user data:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };

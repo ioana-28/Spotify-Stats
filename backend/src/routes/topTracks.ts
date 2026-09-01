@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getTopTracks } from '../controller/topTrackController.js';
+import { getTopTracks } from '../controllers/topTrackController.js';
 
 const router = Router();
 

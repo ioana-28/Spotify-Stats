@@ -16,8 +16,6 @@ export const timeRangeOptions: TimeRangeOption[] = [
     { id: 'long_term', label: 'All Time' },
 ];
 
-export const pillPalette = [colors.coral, colors.sky, colors.mint, colors.grape, colors.sunflower];
-
 export const podiumStyle: Record<number, { icon: typeof Crown; accent: string }> = {
     0: { icon: Crown, accent: colors.sunflower },
     1: { icon: Medal, accent: colors.sky },
@@ -115,46 +113,6 @@ export function injectStatsStylesOnce() {
         }
     `;
     document.head.appendChild(style);
-}
-
-export function Pills({ items }: { items: string[] }) {
-    if (!items || items.length === 0) {
-        return (
-            <span style={{ color: colors.inkSoft, fontSize: 12, fontFamily: fontBody, fontWeight: 700 }}>
-                Various genres
-            </span>
-        );
-    }
-    return (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'inherit' }}>
-            {items.slice(0, 2).map((item, i) => (
-                <span
-                    key={item}
-                    style={{
-                        fontFamily: fontBody,
-                        fontSize: 11,
-                        fontWeight: 700,
-                        color: colors.ink,
-                        padding: '3px 9px',
-                        borderRadius: 999,
-                        border: `1.5px solid ${colors.ink}`,
-                        backgroundColor: `${pillPalette[i % pillPalette.length]}55`,
-                        whiteSpace: 'nowrap',
-                    }}
-                >
-                    {item}
-                </span>
-            ))}
-        </div>
-    );
-}
-
-export function MetaLine({ children }: { children: React.ReactNode }) {
-    return (
-        <span style={{ color: colors.inkSoft, fontSize: 13, fontFamily: fontBody, fontWeight: 700 }}>
-            {children}
-        </span>
-    );
 }
 
 export function Avatar({
@@ -344,9 +302,6 @@ export function EmptyMessage({ message }: { message: string }) {
     return <p style={{ color: colors.inkSoft, fontSize: 14 }}>{message}</p>;
 }
 
-// ---------------------------------------------------------------------------
-// Podium (top 3) + rest-of-list
-// ---------------------------------------------------------------------------
 
 export interface StatsItem {
     key: string | number;
@@ -360,7 +315,6 @@ export interface StatsItem {
 
 export function PodiumRow({ items }: { items: StatsItem[] }) {
     if (items.length === 0) return null;
-    // Visual order: 2nd, 1st, 3rd — so the top spot sits centered and raised.
     const order = [1, 0, 2].filter((i) => items[i]);
 
     return (
