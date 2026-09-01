@@ -95,8 +95,12 @@ export default function TopArtists() {
         setLoading(true);
         setError(null);
 
-        fetch(`http://localhost:5000/api/top-artists?timeRange=${selectedTimeRange}`)
+        fetch(`http://localhost:5000/api/top-artists?timeRange=${selectedTimeRange}`, { credentials: 'include' })
             .then((res) => {
+                if (res.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
                 if (!res.ok) throw new Error('Failed to fetch stats');
                 return res.json();
             })

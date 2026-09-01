@@ -135,8 +135,12 @@ export default function TopGenres() {
         setError(null);
         setBarsAnimated(false);
 
-        fetch(`http://localhost:5000/api/genres?timeRange=${selectedTimeRange}`)
+        fetch(`http://localhost:5000/api/genres?timeRange=${selectedTimeRange}`, { credentials: 'include' })
             .then((res) => {
+                if (res.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
                 if (!res.ok) throw new Error('Failed to fetch stats');
                 return res.json();
             })
@@ -203,7 +207,6 @@ export default function TopGenres() {
                                 <span style={{
                                     position: 'absolute',
                                     inset: '4px -6px 0px -6px',
-                                    backgroundColor: colors.mint,
                                     transform: 'rotate(-2deg)',
                                     borderRadius: 5,
                                     zIndex: 0,

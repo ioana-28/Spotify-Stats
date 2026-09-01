@@ -2,6 +2,7 @@ import type {Request, Response} from "express";
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import pkg from 'pg';
+import { getSessionUser } from '../lib/session.js';
 
 const { Pool } = pkg;
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -10,9 +11,7 @@ const prisma = new PrismaClient({ adapter });
 
 export const getDashboardData = async (req: Request, res: Response) => {
     try {
-        const user = await prisma.user.findFirst({
-            orderBy: { createdAt: 'desc' },
-        });
+        const user = await getSessionUser(req, prisma);
 
         if (!user) {
             return res.status(401).json({ error: 'No user found. Please log in first.' });
