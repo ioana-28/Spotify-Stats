@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Home, Users, Disc3, ListMusic, Settings, User, Star } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';    
 import { colors, fontDisplay, fontBody, stickerShadow } from '../theme';
+
+interface UserProfile {
+    displayName: string;
+    avatarUrl: string;
+}
 
 const navItems = [
   { label: 'Overview', path:'/dashboard', icon: Home, color: colors.coral },
@@ -20,6 +25,20 @@ export default function Sidebar() {
     location.pathname === '/top-artists' ? 'Top Artists' :
     location.pathname === '/top-tracks' ? 'Top Tracks' : 'Overview'
   );
+  const [profile, setProfile] = React.useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/auth/me', { credentials: 'include' })
+        .then((res) => { 
+            if(!res.ok) {
+                throw new Error('Failed to fetch user data');
+            }
+            return res.json();
+        })
+        .then((data: UserProfile) => setProfile(data))
+        .catch((err) => console.error('Error fetching user data:', err));
+
+  }, []);
   return (
     <aside style={{
         backgroundColor: colors.panel,
@@ -107,39 +126,91 @@ export default function Sidebar() {
             })}
         </nav>
 
+      
+        
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-           <div style={{ marginTop: 'auto', padding: '20px 0', borderTop: `1px solid ${colors.inkSoft}`, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <button
-                    style={{
-                    display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px',
-                    borderRadius: 12, border: 'none', background: 'transparent',
-                    color: colors.inkSoft, fontSize: 14, fontWeight: 700, cursor: 'pointer',
-                    width: '100%', fontFamily: fontBody,
-                }}
-                >
-                    <Settings size={17} strokeWidth={2.5} />
-                        Settings
-                </button>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 12px 2px' }}>
-          <div
+        <div
+          style={{
+            marginTop: 'auto',
+            padding: '20px 0',
+            borderTop: `1px solid ${colors.inkSoft}`,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 4,
+          }}
+        >
+          <button
             style={{
-              width: 30, height: 30, borderRadius: '50%',
-              backgroundColor: colors.paper, border: `2.5px solid ${colors.ink}`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              padding: '8px 12px',
+              borderRadius: 12,
+              border: 'none',
+              background: 'transparent',
+              color: colors.inkSoft,
+              fontSize: 14,
+              fontWeight: 700,
+              cursor: 'pointer',
+              width: '100%',
+              fontFamily: fontBody,
             }}
           >
-            <User size={14} color={colors.ink} strokeWidth={2.5} />
-          </div>
-          <div style={{ overflow: 'hidden' }}>
-            <div style={{ color: colors.ink, fontSize: 13, fontWeight: 800, whiteSpace: 'nowrap', fontFamily: fontBody }}>
-              Test
-            </div>
-            <div style={{ color: colors.inkSoft, fontSize: 11, fontWeight: 600 }}>Spotify account</div>
-          </div>
-        </div>
+            <Settings size={17} strokeWidth={2.5} />
+            Settings
+          </button>
 
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 12px 2px' }}>
+            {profile?.avatarUrl ? (
+              <img
+                src={profile.avatarUrl}
+                alt={profile.displayName}
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                  border: `2px solid ${colors.ink}`,
+                  flexShrink: 0,
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: '50%',
+                  backgroundColor: colors.paper,
+                  border: `2px solid ${colors.ink}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <User size={14} color={colors.ink} strokeWidth={2.5} />
+              </div>
+            )}
+
+            <div style={{ overflow: 'hidden' }}>
+              <div
+                style={{
+                  color: colors.ink,
+                  fontSize: 13,
+                  fontWeight: 800,
+                  whiteSpace: 'nowrap',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  fontFamily: fontBody,
+                }}
+              >
+                {profile?.displayName || 'Loading...'}
+              </div>
+              <div style={{ color: colors.inkSoft, fontSize: 11, fontWeight: 600 }}>Spotify account</div>
             </div>
+          </div>
         </div>
+            </div>
         
     </aside>
 

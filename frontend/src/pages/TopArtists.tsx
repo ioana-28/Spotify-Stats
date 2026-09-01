@@ -12,6 +12,7 @@ import {
     StatsList,
 } from '../assets/StatsShared';
 import type { TimeRange, StatsItem } from '../assets/StatsShared';
+import LogoutButton from '../components/LogoutButton';
 
 const pillPalette = [colors.coral, colors.sky, colors.mint, colors.grape, colors.sunflower];
 
@@ -136,6 +137,7 @@ export default function TopArtists() {
 
     return (
         <StatsPageShell>
+            <LogoutButton />
             <StatsHeader
                 titlePrefix="Top"
                 highlightWord="Artists"

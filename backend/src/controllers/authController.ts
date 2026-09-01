@@ -5,7 +5,7 @@ import querystring from 'querystring';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import pkg from 'pg';
-import { SESSION_COOKIE } from '../lib/session.js';
+import { SESSION_COOKIE, getSessionUser } from '../lib/session.js';
 
 const { Pool } = pkg;
 
@@ -105,5 +105,24 @@ export const logout = async (req: Request, res: Response) => {
   catch (error) {
     console.error('Logout error:', error);
     res.status(500).send('Logout failed');
+  }
+};
+
+export const getMe = async (req: Request, res: Response) => {
+  try {
+    const user = await getSessionUser(req, prisma);
+    if (!user) {
+      return res.status(401).json({ error: 'No user found. Please log in first.' });
+    }
+    return res.json({
+      id: user.id,
+      email: user.email,
+      displayName: user.displayName,
+      avatarUrl: user.avatarUrl,
+    });
+  }
+  catch (error) {
+    console.error('Error fetching user data:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };

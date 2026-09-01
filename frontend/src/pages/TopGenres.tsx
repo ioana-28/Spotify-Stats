@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
+import LogoutButton from '../components/LogoutButton';
 import { colors, fontDisplay, fontBody, stickerShadow } from '../theme';
 
 type TimeRange = 'short_term' | 'medium_term' | 'long_term';
@@ -169,6 +170,7 @@ export default function TopGenres() {
 
     return (
         <div className="tg-page-bg" style={{ display: 'flex', minHeight: '100vh', backgroundColor: colors.ink }}>
+            <LogoutButton />
             <Sidebar />
             <main style={{ flex: 1, padding: '36px 40px', boxSizing: 'border-box', maxWidth: 920, margin: '0 auto' }}>
                 <section style={{
@@ -178,7 +180,6 @@ export default function TopGenres() {
                     padding: 28,
                     boxShadow: stickerShadow(4),
                 }}>
-                    {/* Header */}
                     <div style={{ marginBottom: 28 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
                             <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: colors.coral }} />
