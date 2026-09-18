@@ -15,7 +15,7 @@ const prisma = new PrismaClient({ adapter });
 
 export const login = (req: Request, res: Response) => {
   const state = Math.random().toString(36).substring(7);
-  const scope = 'user-read-private user-read-email user-top-read';
+  const scope = 'user-read-private user-read-email user-top-read user-read-currently-playing';
   
   const queryParams = querystring.stringify({
     response_type: 'code',
