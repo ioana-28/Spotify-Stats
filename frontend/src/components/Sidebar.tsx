@@ -23,7 +23,8 @@ export default function Sidebar() {
   const [activeItem, setActiveItem] = React.useState(() =>
     location.pathname === '/stats' ? 'Statistics' :
     location.pathname === '/top-artists' ? 'Top Artists' :
-    location.pathname === '/top-tracks' ? 'Top Tracks' : 'Overview'
+    location.pathname === '/top-tracks' ? 'Top Tracks' : 
+    location.pathname === '/top-genres' ? 'Genres' : 'Overview'
   );
   const [profile, setProfile] = React.useState<UserProfile | null>(null);
 
