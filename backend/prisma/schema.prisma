@@ -18,9 +18,10 @@ model User {
   avatarUrl    String?
   accessToken  String
   refreshToken String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
   snapshots    Snapshot[]
+  eraSnapshots EraSnapshot[]
 }
 
 model Snapshot {
@@ -54,4 +55,25 @@ model TopArtist {
   genres     String[]
   imageUrl   String?
   rank       Int
+}
+
+model EraSnapshot {
+  id             String     @id @default(uuid())
+  userId         String
+  user           User       @relation(fields: [userId], references: [id])
+  tracksAnalyzed Int
+  dominantDecade String
+  createdAt      DateTime   @default(now())
+  eras           EraCount[]
+
+  @@index([userId, createdAt])
+}
+
+model EraCount {
+  id         String      @id @default(uuid())
+  snapshotId String
+  snapshot   EraSnapshot @relation(fields: [snapshotId], references: [id])
+  decade     String
+  count      Int
+  score      Int
 }
