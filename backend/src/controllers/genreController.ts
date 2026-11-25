@@ -3,9 +3,10 @@ import type { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pkg from "pg";
-import { getArtistGenres } from "../services/lastFmService.js";
 import { getSessionUser } from "../lib/session.js";
 import { getValidAccessToken, SpotifyAuthError } from "../lib/spotify.js";
+import { resolveArtistGenres } from "../services/genreService.js";
+import { toBroadGenre } from "../services/genreCategoryMapper.js";
 
 const { Pool } = pkg;
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -43,15 +44,10 @@ export const getGenres = async (req: Request, res: Response) => {
             return res.json({ genres: [] });
         }
 
-        const artistsWithGenres = await Promise.all(
-            spotifyArtists.map(async (artist: any) => {
-                const genres = await getArtistGenres(artist.name);
-                return {
-                    name: artist.name,
-                    genres,
-                };
-            }),
-        );
+        const artistNames = spotifyArtists
+            .map((artist: any) => String(artist.name ?? ""))
+            .filter(Boolean);
+        const resolved = await resolveArtistGenres(prisma, artistNames);
 
         type GenreData = {
             score: number;
@@ -61,9 +57,15 @@ export const getGenres = async (req: Request, res: Response) => {
 
         const genreMap: Record<string, GenreData> = {};
 
-        artistsWithGenres.forEach((artist: any, index: number) => {
+        spotifyArtists.forEach((artist: any, index: number) => {
             const weight = totalArtists - index;
-            artist.genres.forEach((genre: string) => {
+            const broadGenres = new Set(
+                (resolved.get(artist.name)?.genres ?? [])
+                    .map(toBroadGenre)
+                    .filter((genre) => genre !== 'Other'),
+            );
+
+            broadGenres.forEach((genre) => {
                 if (!genreMap[genre]) {
                     genreMap[genre] = { score: 0, count: 0, artists: [] };
                 }
@@ -81,7 +83,7 @@ export const getGenres = async (req: Request, res: Response) => {
         );
         const topGenres = Object.entries(genreMap)
             .map(([genre, data]) => ({
-                genre: genre.replace(/\b\w/g, (c) => c.toUpperCase()),
+                genre,
                 score: data.score,
                 percentage:
                     totalScore > 0
@@ -92,6 +94,7 @@ export const getGenres = async (req: Request, res: Response) => {
             }))
             .sort((a, b) => b.score - a.score)
             .slice(0, 10);
+
         res.json({ genres: topGenres });
     } catch (error) {
         if (error instanceof SpotifyAuthError) {
@@ -99,6 +102,7 @@ export const getGenres = async (req: Request, res: Response) => {
                 .status(401)
                 .json({ error: "Session expired. Please log in again." });
         }
+        console.error("Error fetching genre data:", error);
         return res.status(500).json({ error: "Failed to fetch genre data." });
     }
 };

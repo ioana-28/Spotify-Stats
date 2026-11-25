@@ -149,7 +149,9 @@ export default function TopGenres() {
                     )}
 
                     {!loading && !error && genres.length === 0 && (
-                        <p className={shared.emptyMessage}>No genre data found.</p>
+                        <p className={shared.emptyMessage}>
+                            Not enough genre data yet. Keep listening and check back.
+                        </p>
                     )}
 
                     {!loading && !error && genres.length > 0 && (

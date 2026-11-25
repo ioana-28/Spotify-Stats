@@ -20,7 +20,7 @@ export const getArtistGenres = async (artist: string): Promise<string[]> => {
         if (!Array.isArray(tags)) {
             return [];
         }
-        return tags.slice(0, 3).map((tag: any) => tag.name);
+        return tags.slice(0, 5).map((tag: any) => tag.name);
     } catch (error) {
         return [];
     }
