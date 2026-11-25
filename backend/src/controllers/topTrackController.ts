@@ -32,13 +32,10 @@ export const getTopTracks = async (req: Request, res: Response) => {
         const spotifyTracks = response.data.items;
 
         const latestSnapshot = await prisma.snapshot.findFirst({
-            where: { userId: user.id, timeRange },
+            where: { userId: user.id, timeRange, tracks: { some: {} } },
             orderBy: { createdAt: 'desc' },
             include: {
                 tracks: {
-                    orderBy: { rank: 'asc' },
-                },
-                artists: {
                     orderBy: { rank: 'asc' },
                 },
             },
@@ -74,25 +71,9 @@ export const getTopTracks = async (req: Request, res: Response) => {
                             rank: index + 1,
                         })),
                     },
-                    ...(latestSnapshot?.artists?.length
-                        ? {
-                              artists: {
-                                  create: latestSnapshot.artists.map((artist) => ({
-                                      spotifyId: artist.spotifyId,
-                                      name: artist.name,
-                                      genres: artist.genres,
-                                      imageUrl: artist.imageUrl,
-                                      rank: artist.rank,
-                                  })),
-                              },
-                          }
-                        : {}),
                 },
                 include: {
                     tracks: {
-                        orderBy: { rank: 'asc' },
-                    },
-                    artists: {
                         orderBy: { rank: 'asc' },
                     },
                 },

@@ -19,18 +19,26 @@ export const getDashboardData = async (req: Request, res: Response) => {
             return res.status(401).json({ error: 'No user found. Please log in first.' });
         }
 
-        const latestSnapshot = await prisma.snapshot.findFirst({
-            where: { userId: user.id, timeRange: 'short_term' },
-            orderBy: { createdAt: 'desc' },
-            include: {
-                artists: { orderBy: { rank: 'asc' } },
-                tracks: { orderBy: { rank: 'asc' } },
-            },
-        });
+        const [artistsSnapshot, tracksSnapshot] = await Promise.all([
+            prisma.snapshot.findFirst({
+                where: { userId: user.id, timeRange: 'short_term', artists: { some: {} } },
+                orderBy: { createdAt: 'desc' },
+                include: {
+                    artists: { orderBy: { rank: 'asc' } },
+                },
+            }),
+            prisma.snapshot.findFirst({
+                where: { userId: user.id, timeRange: 'short_term', tracks: { some: {} } },
+                orderBy: { createdAt: 'desc' },
+                include: {
+                    tracks: { orderBy: { rank: 'asc' } },
+                },
+            }),
+        ]);
 
         res.json({
-            artists: latestSnapshot?.artists.slice(0, 3) || [],
-            tracks: latestSnapshot?.tracks.slice(0, 3) || [],
+            artists: artistsSnapshot?.artists.slice(0, 3) || [],
+            tracks: tracksSnapshot?.tracks.slice(0, 3) || [],
         });
     } catch (error) {
         console.error('Error fetching dashboard data:', error);

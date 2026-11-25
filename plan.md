@@ -12,7 +12,7 @@ Last updated: 2026-11-25
 | # | Feature | Status | Notes |
 |---|---------|--------|-------|
 | 1 | Secure Spotify login | 🟢 Done | Token refresh + expiry, `state` validated, signed session cookie, refresh token encrypted at rest |
-| 2 | Top artists & top tracks | 🟢 Done | limit=10 only; snapshot cross-copy quirk |
+| 2 | Top artists & top tracks | 🟢 Done | 10-item lists; artist and track snapshots decoupled (no cross-copy) |
 | 3 | Genre breakdown | 🟢 Done | Spotify `artist.genres` deprecated; Last.fm fallback unthrottled |
 | 4 | Decade / release-year analysis | 🟢 Done | "Time Capsule" in Statistics; era history API unused by UI |
 | 5 | Mainstream vs. underground score | 🔴 Not started | `artist.popularity` already available from Spotify |
@@ -72,8 +72,8 @@ Use **`127.0.0.1` everywhere** — frontend, API, and the Spotify redirect URI. 
 ## Phase 2 — Improve existing features (2, 3, 4, 6)
 
 ### Feature 2 — Top artists & tracks
-- [ ] Raise `limit` from 10 to 50 (or make it configurable / paginated).
-- [ ] Decouple the snapshot cross-copy: top artists and top tracks each cloning the other list from a possibly older snapshot (`topArtistController.ts`, `topTrackController.ts`). Either fetch both in one endpoint or store them independently with the same timestamp.
+- [x] Keep the page lists at **10** (decided). Decade/Time Capsule and Genres keep fetching **50** behind the scenes.
+- [x] Decouple artist/track snapshots: Top Artists stores only artists, Top Tracks stores only tracks; the dashboard reads the latest artist snapshot and latest track snapshot separately. Queries filter to snapshots that actually contain that list, so no cross-copy and no empty-panel mixups.
 
 ### Feature 3 — Genre breakdown
 - [ ] Add throttling / caching for Last.fm `gettoptags` calls (currently up to 50 unthrottled per request).
@@ -150,4 +150,5 @@ Use **`127.0.0.1` everywhere** — frontend, API, and the Spotify redirect URI. 
 | 2026-11-23 | — | Created plan; audited codebase (5/9 features done) | code review |
 | 2026-11-25 | 1 | Login fixed: token refresh + `expiresAt`, `state` check, signed cookie, removed `/session` bypass, encrypted refresh token, env-driven redirects | `tsc --noEmit`, prisma migrate, crypto round-trip test |
 | 2026-11-25 | 1 | Local dev aligned to `127.0.0.1` (frontend fetches, login link, `FRONTEND_URL`, redirect URI) after `localhost`/`127.0.0.1` cookie-host mismatch | Spotify redirect URI acceptance + manual login |
-| 2026-11-25 | 2 | Now playing: live progress bar (local 1s tick), paused state keeps track visible, podcast episodes handled | `tsc --noEmit` (backend), `tsc -b` (frontend); manual pending |
+| 2026-11-25 | 2 | Now playing: live progress bar (local 1s tick), paused state keeps track visible, podcast episodes handled (`additional_types=track,episode`) | `tsc` (backend/frontend); manually verified: songs, pause, progress, podcast episode |
+| 2026-11-25 | 2 | Top lists: decoupled artist/track snapshots, removed cross-copy; page limit kept at 10 | `tsc --noEmit` (backend) |
