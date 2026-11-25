@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import pkg from 'pg';
 import { getSessionUser } from '../lib/session.js';
+import { getValidAccessToken, SpotifyAuthError } from '../lib/spotify.js';
 
 const { Pool } = pkg;
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -23,8 +24,9 @@ export const getTopTracks = async (req: Request, res: Response) => {
             ? (req.query.timeRange as string)
             : 'short_term';
 
+        const accessToken = await getValidAccessToken(user, prisma);
         const response = await axios.get(`https://api.spotify.com/v1/me/top/tracks?limit=10&time_range=${timeRange}`, {
-            headers: { Authorization: `Bearer ${user.accessToken}` }
+            headers: { Authorization: `Bearer ${accessToken}` }
         });
 
         const spotifyTracks = response.data.items;
@@ -100,6 +102,9 @@ export const getTopTracks = async (req: Request, res: Response) => {
         res.json({ items: activeSnapshot?.tracks || [] });
     }
     catch (error) {
+        if (error instanceof SpotifyAuthError) {
+            return res.status(401).json({ error: 'Session expired. Please log in again.' });
+        }
         console.error('Error fetching and saving top tracks:', error);
         res.status(500).json({ error: 'Internal server error' });   
     }

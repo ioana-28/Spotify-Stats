@@ -30,7 +30,7 @@ export default function Sidebar() {
   const [profile, setProfile] = React.useState<UserProfile | null>(null);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/auth/me', { credentials: 'include' })
+    fetch('http://127.0.0.1:5000/api/auth/me', { credentials: 'include' })
         .then((res) => { 
             if(!res.ok) {
                 throw new Error('Failed to fetch user data');

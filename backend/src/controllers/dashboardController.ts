@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import pkg from 'pg';
 import { getSessionUser } from '../lib/session.js';
+import { getValidAccessToken, SpotifyAuthError } from '../lib/spotify.js';
 
 const { Pool } = pkg;
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -44,8 +45,10 @@ export const getCurrentlyPlayingTrack = async (req: Request, res: Response) => {
             return res.status(401).json({ error: 'No user found. Please log in first.' });
         }
 
+        const accessToken = await getValidAccessToken(user, prisma);
+
         const response = await axios.get('https://api.spotify.com/v1/me/player/currently-playing', {
-            headers: { Authorization: `Bearer ${user.accessToken}` },
+            headers: { Authorization: `Bearer ${accessToken}` },
             validateStatus: (status) => status === 200 || status === 204,
         });
 
@@ -68,6 +71,9 @@ export const getCurrentlyPlayingTrack = async (req: Request, res: Response) => {
         });
     }
     catch (error) {
+        if (error instanceof SpotifyAuthError) {
+            return res.status(401).json({ error: 'Session expired. Please log in again.' });
+        }
         console.error('Error fetching currently playing track:', error);
         res.status(500).json({ error: 'Internal server error' });
     }

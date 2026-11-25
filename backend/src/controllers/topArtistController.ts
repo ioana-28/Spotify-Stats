@@ -5,6 +5,7 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import pkg from 'pg';
 import { getArtistGenres } from "../services/lastFmService.js";
 import { getSessionUser } from "../lib/session.js";
+import { getValidAccessToken, SpotifyAuthError } from "../lib/spotify.js";
 
 const { Pool } = pkg;
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -26,8 +27,9 @@ export const getTopArtists = async (req: Request, res: Response) => {
             ? (req.query.timeRange as string)
             : 'short_term';
 
+        const accessToken = await getValidAccessToken(user, prisma);
         const response = await axios.get(`https://api.spotify.com/v1/me/top/artists?limit=10&time_range=${timeRange}`, {
-            headers: { Authorization: `Bearer ${user.accessToken}` }
+            headers: { Authorization: `Bearer ${accessToken}` }
         });
 
         const spotifyArtists = response.data.items;
@@ -113,6 +115,9 @@ export const getTopArtists = async (req: Request, res: Response) => {
         res.json({ items: activeSnapshot?.artists || [] });
     }
     catch (error) {
+        if (error instanceof SpotifyAuthError) {
+            return res.status(401).json({ error: 'Session expired. Please log in again.' });
+        }
         console.error('Error fetching and saving top artists:', error);
         res.status(500).json({ error: 'Internal server error' });
     }

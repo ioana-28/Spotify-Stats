@@ -18,6 +18,7 @@ model User {
   avatarUrl    String?
   accessToken  String
   refreshToken String
+  expiresAt    DateTime?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   snapshots    Snapshot[]

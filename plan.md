@@ -3,7 +3,7 @@
 Working document. Update the checkboxes and the Progress Log as features land.
 **Do not commit or push until explicitly requested.**
 
-Last updated: 2026-11-23
+Last updated: 2026-11-25
 
 ---
 
@@ -11,7 +11,7 @@ Last updated: 2026-11-23
 
 | # | Feature | Status | Notes |
 |---|---------|--------|-------|
-| 1 | Secure Spotify login | 🟡 Partial | OAuth works, but no token refresh, no `state` validation, session cookie is spoofable |
+| 1 | Secure Spotify login | 🟢 Done | Token refresh + expiry, `state` validated, signed session cookie, refresh token encrypted at rest |
 | 2 | Top artists & top tracks | 🟢 Done | limit=10 only; snapshot cross-copy quirk |
 | 3 | Genre breakdown | 🟢 Done | Spotify `artist.genres` deprecated; Last.fm fallback unthrottled |
 | 4 | Decade / release-year analysis | 🟢 Done | "Time Capsule" in Statistics; era history API unused by UI |
@@ -34,18 +34,36 @@ Legend: 🟢 done · 🟡 partial / needs hardening · 🔴 not started
 
 ---
 
+## Local dev host convention
+
+Use **`127.0.0.1` everywhere** — frontend, API, and the Spotify redirect URI. Cookies are scoped by hostname, so mixing `localhost` and `127.0.0.1` breaks both the OAuth `state` cookie and the session cookie.
+
+- Frontend: `http://127.0.0.1:5173`
+- Backend: `http://127.0.0.1:5000`
+- Spotify Redirect URI (must match the developer dashboard exactly): `http://127.0.0.1:5000/api/auth/callback`
+
+---
+
 ## Phase 1 — Harden authentication & session (Feature 1)
 
 **Why first:** everything depends on a valid token; the app currently breaks ~1h after login.
 
-- [ ] Add `expiresAt` (from `expires_in`) to the `User` model + migration.
-- [ ] Create a shared `getValidAccessToken(user)` helper that refreshes via the token endpoint when expired, persists new `accessToken`/`refreshToken`/`expiresAt`.
-- [ ] Replace direct `user.accessToken` usage in every controller with the helper
+- [x] Add `expiresAt` (from `expires_in`) to the `User` model + migration.
+      Migration: `20261125173152_add_token_expiry`.
+- [x] Create a shared `getValidAccessToken(user)` helper that refreshes via the token endpoint when expired, persists new `accessToken`/`refreshToken`/`expiresAt`. (`src/lib/spotify.ts`)
+- [x] Replace direct `user.accessToken` usage in every controller with the helper
       (`dashboardController`, `genreController`, `topArtistController`, `topTrackController`, `statsController`).
-- [ ] Validate OAuth `state`: store in an httpOnly cookie at `/login`, compare in `/callback`, clear after use.
-- [ ] Sign the session cookie (or move to a server-side session) so the raw user id can't be spoofed.
-- [ ] Move hardcoded `http://localhost:5000` / `http://localhost:5173` URLs to env vars (`BACKEND_URL`, `FRONTEND_URL`).
-- [ ] Handle refresh failure → clear session and redirect to login.
+- [x] Validate OAuth `state`: store in an httpOnly cookie at `/login`, compare in `/callback`, clear after use.
+- [x] Sign the session cookie (via `cookieParser(SESSION_SECRET)`) so the raw user id can't be spoofed.
+- [x] Remove the public `/api/auth/session?userId=` endpoint (was an auth bypass).
+- [x] Move hardcoded redirect URLs to env vars (`FRONTEND_URL`); backend no longer redirects to itself.
+- [x] Handle refresh failure → controllers return `401`, frontend redirects to login.
+- [x] Encrypt the refresh token at rest (AES-256-GCM, `src/lib/crypto.ts`); legacy plaintext values still decrypt and get upgraded on next refresh.
+- [x] Friendly redirect on Spotify cancel/denial (`/login?error=...`).
+
+**Decisions:** signed cookie session (no new table); refresh token encrypted, access token left plaintext (short-lived); PKCE deferred (confidential server-side client).
+
+**Verification done:** `prisma generate` + `migrate dev` applied; `tsc --noEmit` clean; crypto encrypt/decrypt round-trip tested; frontend lint errors are pre-existing in the unrelated in-progress restyle.
 
 **Done when:** a request still works after the access token has expired; a tampered/absent state or session cookie is rejected.
 
@@ -116,7 +134,8 @@ Legend: 🟢 done · 🟡 partial / needs hardening · 🔴 not started
 
 ## Deferred / open questions
 
-- Deployment target & redirect URIs (needed to finish Phase 1 env migration).
+- Deployment target & redirect URIs (login is env-driven now; update `.env` / Spotify dashboard on deploy).
+- PKCE for the OAuth flow (deferred; optional for a confidential client).
 - LLM provider and budget for Feature 7.
 - How long to retain play history (Feature 9) and privacy implications.
 
@@ -127,3 +146,5 @@ Legend: 🟢 done · 🟡 partial / needs hardening · 🔴 not started
 | Date | Phase | What changed | Verified by |
 |------|-------|--------------|-------------|
 | 2026-11-23 | — | Created plan; audited codebase (5/9 features done) | code review |
+| 2026-11-25 | 1 | Login fixed: token refresh + `expiresAt`, `state` check, signed cookie, removed `/session` bypass, encrypted refresh token, env-driven redirects | `tsc --noEmit`, prisma migrate, crypto round-trip test |
+| 2026-11-25 | 1 | Local dev aligned to `127.0.0.1` (frontend fetches, login link, `FRONTEND_URL`, redirect URI) after `localhost`/`127.0.0.1` cookie-host mismatch | Spotify redirect URI acceptance + manual login |

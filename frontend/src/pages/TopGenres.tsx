@@ -62,7 +62,7 @@ export default function TopGenres() {
         setError(null);
         setBarsAnimated(false);
 
-        fetch(`http://localhost:5000/api/genres?timeRange=${selectedTimeRange}`, { credentials: 'include' })
+        fetch(`http://127.0.0.1:5000/api/genres?timeRange=${selectedTimeRange}`, { credentials: 'include' })
             .then((res) => {
                 if (res.status === 401) {
                     window.location.href = '/login';

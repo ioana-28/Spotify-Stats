@@ -60,7 +60,7 @@ export default function Statistics() {
     useEffect(() => {
         if (libraryData) return;
         setLoading(true);
-        fetch("http://localhost:5000/api/stats", { credentials: "include" })
+        fetch("http://127.0.0.1:5000/api/stats", { credentials: "include" })
             .then((res) => {
                 if (res.status === 401) {
                     window.location.href = "/login";
@@ -84,7 +84,7 @@ export default function Statistics() {
         if (capsuleData) return;
         setCapsuleLoading(true);
         setCapsuleError(null);
-        fetch("http://localhost:5000/api/stats/time-capsule", {
+        fetch("http://127.0.0.1:5000/api/stats/time-capsule", {
             credentials: "include",
         })
             .then((res) => {

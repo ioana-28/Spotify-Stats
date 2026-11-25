@@ -48,7 +48,7 @@ export default function Dashboard() {
     const [currentlyPlaying, setCurrentlyPlaying] = useState<CurrentlyPlaying | null>(null);
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/dashboard', { credentials: 'include' })
+        fetch('http://127.0.0.1:5000/api/dashboard', { credentials: 'include' })
             .then((res) => {
                 if (res.status === 401) {
                     window.location.href = '/login';
@@ -69,7 +69,7 @@ export default function Dashboard() {
 
     useEffect(() => {
       const fetchCurrentlyPlaying = () => {
-        fetch('http://localhost:5000/api/dashboard/currently-playing', { credentials: 'include' })
+        fetch('http://127.0.0.1:5000/api/dashboard/currently-playing', { credentials: 'include' })
           .then((res) => {
             if (!res.ok) return null;
             return res.json();

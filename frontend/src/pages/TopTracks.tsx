@@ -46,7 +46,7 @@ export default function TopTracks() {
         setLoading(true);
         setError(null);
 
-        fetch(`http://localhost:5000/api/top-tracks?timeRange=${selectedTimeRange}`, { credentials: 'include' })
+        fetch(`http://127.0.0.1:5000/api/top-tracks?timeRange=${selectedTimeRange}`, { credentials: 'include' })
             .then((res) => {
                 if (res.status === 401) {
                     window.location.href = '/login';

@@ -5,6 +5,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import pkg from "pg";
 import { getArtistGenres } from "../services/lastFmService.js";
 import { getSessionUser } from "../lib/session.js";
+import { getValidAccessToken, SpotifyAuthError } from "../lib/spotify.js";
 
 const { Pool } = pkg;
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -28,10 +29,11 @@ export const getGenres = async (req: Request, res: Response) => {
             ? (req.query.timeRange as string)
             : "short_term";
 
+        const accessToken = await getValidAccessToken(user, prisma);
         const spotifyResponse = await axios.get(
             `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=${timeRange}`,
             {
-                headers: { Authorization: `Bearer ${user.accessToken}` },
+                headers: { Authorization: `Bearer ${accessToken}` },
             },
         );
 
@@ -92,6 +94,11 @@ export const getGenres = async (req: Request, res: Response) => {
             .slice(0, 10);
         res.json({ genres: topGenres });
     } catch (error) {
+        if (error instanceof SpotifyAuthError) {
+            return res
+                .status(401)
+                .json({ error: "Session expired. Please log in again." });
+        }
         return res.status(500).json({ error: "Failed to fetch genre data." });
     }
 };

@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pkg from "pg";
 import { getSessionUser } from "../lib/session.js";
+import { getValidAccessToken, SpotifyAuthError } from "../lib/spotify.js";
 import {
     analyzeEras,
     eraDistributionKey,
@@ -41,7 +42,8 @@ export const getLibrarySummary = async (req: Request, res: Response) => {
                 .json({ error: "No user found. Please log in first." });
         }
 
-        const headers = { Authorization: `Bearer ${user.accessToken}` };
+        const accessToken = await getValidAccessToken(user, prisma);
+        const headers = { Authorization: `Bearer ${accessToken}` };
 
         const [tracksRes, albumsRes, showsRes, episodesRes] = await Promise.all(
             [
@@ -67,6 +69,11 @@ export const getLibrarySummary = async (req: Request, res: Response) => {
             episodes: episodesRes.data.total ?? 0,
         });
     } catch (error) {
+        if (error instanceof SpotifyAuthError) {
+            return res
+                .status(401)
+                .json({ error: "Session expired. Please log in again." });
+        }
         console.error("Error fetching library summary:", error);
         res.status(500).json({ error: "Internal server error" });
     }
@@ -81,7 +88,8 @@ export const getTimeCapsule = async (req: Request, res: Response) => {
                 .json({ error: "No user found. Please log in first." });
         }
 
-        const headers = { Authorization: `Bearer ${user.accessToken}` };
+        const accessToken = await getValidAccessToken(user, prisma);
+        const headers = { Authorization: `Bearer ${accessToken}` };
 
         const responses = await Promise.all(
             TIME_RANGES.map((timeRange) =>
@@ -135,6 +143,11 @@ export const getTimeCapsule = async (req: Request, res: Response) => {
             createdAt: active?.createdAt ?? null,
         });
     } catch (error) {
+        if (error instanceof SpotifyAuthError) {
+            return res
+                .status(401)
+                .json({ error: "Session expired. Please log in again." });
+        }
         console.error("Error building time capsule:", error);
         res.status(500).json({ error: "Internal server error" });
     }

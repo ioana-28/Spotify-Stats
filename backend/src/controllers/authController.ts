@@ -1,11 +1,17 @@
 import 'dotenv/config';
+import crypto from 'crypto';
 import axios from 'axios';
 import type { Request, Response } from 'express';
 import querystring from 'querystring';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import pkg from 'pg';
-import { SESSION_COOKIE, getSessionUser } from '../lib/session.js';
+import {
+  SESSION_COOKIE,
+  OAUTH_STATE_COOKIE,
+  getSessionUser,
+} from '../lib/session.js';
+import { encryptToken } from '../lib/crypto.js';
 
 const { Pool } = pkg;
 
@@ -13,10 +19,24 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://127.0.0.1:5173';
+const IS_SECURE = process.env.NODE_ENV === 'production';
+
+function redirectWithError(res: Response, reason: string) {
+  return res.redirect(`${FRONTEND_URL}/login?error=${encodeURIComponent(reason)}`);
+}
+
 export const login = (req: Request, res: Response) => {
-  const state = Math.random().toString(36).substring(7);
+  const state = crypto.randomBytes(16).toString('hex');
   const scope = 'user-read-private user-read-email user-top-read user-read-currently-playing user-library-read';
-  
+
+  res.cookie(OAUTH_STATE_COOKIE, state, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: IS_SECURE,
+    maxAge: 10 * 60 * 1000,
+  });
+
   const queryParams = querystring.stringify({
     response_type: 'code',
     client_id: process.env.SPOTIFY_CLIENT_ID,
@@ -29,8 +49,28 @@ export const login = (req: Request, res: Response) => {
 };
 
 export const callback = async (req: Request, res: Response) => {
-  const code = req.query.code as string;
-  
+  const stateCookie = req.cookies?.[OAUTH_STATE_COOKIE] as string | undefined;
+  const stateQuery = req.query.state as string | undefined;
+
+  res.clearCookie(OAUTH_STATE_COOKIE, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: IS_SECURE,
+  });
+
+  if (req.query.error) {
+    return redirectWithError(res, String(req.query.error));
+  }
+
+  if (!stateCookie || !stateQuery || stateCookie !== stateQuery) {
+    return res.status(400).send('Invalid OAuth state. Please start the login again.');
+  }
+
+  const code = req.query.code as string | undefined;
+  if (!code) {
+    return redirectWithError(res, 'missing_code');
+  }
+
   try {
     const response = await axios.post('https://accounts.spotify.com/api/token', 
       querystring.stringify({
@@ -44,7 +84,11 @@ export const callback = async (req: Request, res: Response) => {
         }
       });
 
-    const { access_token, refresh_token } = response.data;
+    const { access_token, refresh_token, expires_in } = response.data;
+    if (!refresh_token) {
+      throw new Error('Spotify did not return a refresh token');
+    }
+
     const userProfileResponse = await axios.get('https://api.spotify.com/v1/me', {
       headers: {
         'Authorization': `Bearer ${access_token}`
@@ -53,6 +97,10 @@ export const callback = async (req: Request, res: Response) => {
 
     const { id, email, display_name, images } = userProfileResponse.data;
     const avatarUrl = images && images.length > 0 ? images[0].url : null;
+    const expiresAt = new Date(
+      Date.now() + (Number(expires_in) || 3600) * 1000,
+    );
+    const encryptedRefreshToken = encryptToken(refresh_token);
 
     await prisma.user.upsert({
       where: { id },
@@ -61,7 +109,8 @@ export const callback = async (req: Request, res: Response) => {
         displayName: display_name,
         avatarUrl,
         accessToken: access_token,
-        refreshToken: refresh_token,
+        refreshToken: encryptedRefreshToken,
+        expiresAt,
       },
       create: {
         id,
@@ -69,37 +118,33 @@ export const callback = async (req: Request, res: Response) => {
         displayName: display_name,
         avatarUrl,
         accessToken: access_token,
-        refreshToken: refresh_token,
+        refreshToken: encryptedRefreshToken,
+        expiresAt,
       },
     });
 
-    res.redirect(`http://localhost:5000/api/auth/session?userId=${encodeURIComponent(id)}`);
+    res.cookie(SESSION_COOKIE, id, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: IS_SECURE,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      signed: true,
+    });
+
+    res.redirect(`${FRONTEND_URL}/dashboard`);
   } catch (error) {
     console.error('Authentication error:', error);
-    res.status(500).send('Authentication failed');
+    return redirectWithError(res, 'authentication_failed');
   }
-};
-
-export const establishSession = (req: Request, res: Response) => {
-  const userId = req.query.userId as string;
-
-  if (!userId) {
-    return res.status(400).send('Missing user id');
-  }
-
-  res.cookie(SESSION_COOKIE, userId, {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: false,
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-  });
-
-  res.redirect('http://localhost:5173/dashboard');
 };
 
 export const logout = async (req: Request, res: Response) => {
   try {
-    res.clearCookie(SESSION_COOKIE, { httpOnly: true, sameSite: 'lax', secure: false });
+    res.clearCookie(SESSION_COOKIE, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: IS_SECURE,
+    });
     return res.status(200).send('Logged out successfully');
   }
   catch (error) {
