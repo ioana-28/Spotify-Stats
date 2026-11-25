@@ -1,0 +1,415 @@
+@keyframes rowIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes podiumIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.9) rotate(var(--stats-rot, 0deg));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(var(--stats-lift, 0px)) scale(1)
+      rotate(var(--stats-rot, 0deg));
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+}
+
+.pageBg {
+  background-image: radial-gradient(
+    var(--color-ink-14) 1.4px,
+    transparent 1.4px
+  );
+  background-size: 18px 18px;
+}
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-ink);
+}
+
+.main {
+  flex: 1;
+  padding: 36px 40px;
+  box-sizing: border-box;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.section {
+  background-color: var(--color-panel);
+  border: 2.5px solid var(--color-ink);
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: var(--sticker-4);
+}
+
+.header {
+  margin-bottom: 28px;
+}
+
+.eyebrowRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.eyebrowDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--color-coral);
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+}
+
+.title {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  line-height: 1.1;
+}
+
+.titleHighlight {
+  position: relative;
+  display: inline-block;
+}
+
+.titleHighlightBackdrop {
+  position: absolute;
+  inset: 4px -6px 0 -6px;
+  transform: rotate(-2deg);
+  border-radius: 5px;
+  z-index: 0;
+}
+
+.titleHighlightText {
+  position: relative;
+  z-index: 1;
+}
+
+.subtitle {
+  margin: 0 0 20px 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+}
+
+.tabBar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 2.5px solid var(--color-ink);
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: none;
+  transform: none;
+  transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.16s ease, background-color 0.16s ease;
+}
+
+.tab:hover {
+  transform: translate(-1px, -1px);
+}
+
+.tab:active {
+  transform: translate(1px, 1px) scale(0.97);
+}
+
+.tab:focus-visible {
+  outline: 2.5px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+.tabActive {
+  background-color: var(--color-sunflower);
+  box-shadow: var(--sticker-2);
+  transform: translate(-1px, -1px);
+}
+
+.avatar,
+.avatarPlaceholder {
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2.5px solid var(--color-ink);
+  background-color: var(--color-panel);
+}
+
+.avatar {
+  object-fit: cover;
+  transition: opacity 0.3s ease, transform 0.18s ease;
+}
+
+.avatarHidden {
+  opacity: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 15px;
+  border-radius: 12px;
+  border: 2.5px solid var(--color-ink);
+  background-color: var(--color-paper);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.18s ease;
+  animation: rowIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.row:hover {
+  transform: translate(-2px, -2px);
+}
+
+.row:hover .avatar {
+  transform: scale(1.05);
+}
+
+.rankBadge {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2.5px solid var(--color-ink);
+  background-color: var(--color-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.row:hover .rankBadge {
+  transform: scale(1.1) rotate(-6deg);
+}
+
+.rowBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rowTitle {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.podiumRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding-top: 18px;
+}
+
+.podiumCard {
+  --stats-rot: 0deg;
+  --stats-lift: 0px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  min-width: 190px;
+  border-radius: 18px;
+  border: 2.5px solid var(--color-ink);
+  background-color: var(--color-paper);
+  box-shadow: var(--sticker-4);
+  animation: podiumIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.2s ease;
+  transform: translateY(var(--stats-lift)) rotate(var(--stats-rot));
+}
+
+.podiumCard:hover {
+  --stats-rot: 0deg;
+  transform: translateY(calc(var(--stats-lift) - 4px)) rotate(0deg);
+}
+
+.podiumFirst {
+  --stats-rot: 0deg;
+  --stats-lift: -14px;
+  flex: 1.15 1 0;
+  padding: 32px 16px 20px;
+  box-shadow: var(--sticker-6);
+}
+
+.podiumSecond {
+  --stats-rot: -3deg;
+  flex: 1 1 0;
+  padding: 26px 14px 18px;
+}
+
+.podiumThird {
+  --stats-rot: 3deg;
+  flex: 1 1 0;
+  padding: 26px 14px 18px;
+}
+
+.podiumMedal {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2.5px solid var(--color-ink);
+  background-color: var(--accent, var(--color-sunflower));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.podiumCard:hover .podiumMedal {
+  transform: translateX(-50%) scale(1.12) rotate(-8deg);
+}
+
+.podiumTitle {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.podiumTitleFirst {
+  font-size: 17px;
+}
+
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeletonShimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-panel) 0%,
+    var(--color-skeleton) 50%,
+    var(--color-panel) 100%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.skeletonItem {
+  height: 74px;
+  border-radius: 12px;
+  border: 2.5px solid var(--color-ink);
+}
+
+.error {
+  animation: shake 0.4s ease;
+}
+
+.errorMessage {
+  color: var(--color-coral);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.emptyMessage {
+  color: var(--color-ink-soft);
+  font-size: 14px;
+}
+
+.metaLine {
+  color: var(--color-ink-soft);
+  font-size: 13px;
+  font-family: var(--font-body);
+  font-weight: 700;
+}
+
+@media (max-width: 680px) {
+  .podiumRow {
+    flex-direction: column;
+  }
+
+  .podiumCard {
+    --stats-rot: 0deg;
+    --stats-lift: 0px;
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .tab,
+  .avatar,
+  .rankBadge,
+  .podiumCard,
+  .podiumMedal {
+    animation: none !important;
+    transition: none !important;
+  }
+}

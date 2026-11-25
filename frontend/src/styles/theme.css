@@ -1,0 +1,21 @@
+:root {
+  --color-paper: #fff6e9;
+  --color-panel: #ffffff;
+  --color-ink: #221f1a;
+  --color-ink-soft: #6e685c;
+  --color-coral: #ff6f5e;
+  --color-sunflower: #ffc845;
+  --color-mint: #3ed9a5;
+  --color-grape: #a184e8;
+  --color-sky: #5bb8f0;
+  --color-ink-14: #221f1a14;
+  --color-skeleton: #f3ecdd;
+
+  --font-display: 'Fredoka', ui-rounded, 'Segoe UI', sans-serif;
+  --font-body: 'Nunito', ui-rounded, 'Segoe UI', sans-serif;
+
+  --sticker-2: 2px 2px 0 var(--color-ink);
+  --sticker-3: 3px 3px 0 var(--color-ink);
+  --sticker-4: 4px 4px 0 var(--color-ink);
+  --sticker-6: 6px 6px 0 var(--color-ink);
+}

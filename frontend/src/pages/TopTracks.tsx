@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { colors, fontBody } from '../theme';
 import {
-    injectStatsStylesOnce,
     timeRangeOptions,
     StatsPageShell,
     StatsHeader,
@@ -13,13 +11,10 @@ import {
 } from '../assets/StatsShared';
 import type { TimeRange, StatsItem } from '../assets/StatsShared';
 import LogoutButton from '../components/LogoutButton';
+import sharedStyles from '../styles/StatsShared.module.css';
 
 function MetaLine({ children }: { children: React.ReactNode }) {
-    return (
-        <span style={{ color: colors.inkSoft, fontSize: 13, fontFamily: fontBody, fontWeight: 700 }}>
-            {children}
-        </span>
-    );
+    return <span className={sharedStyles.metaLine}>{children}</span>;
 }
 
 interface Track {
@@ -44,10 +39,6 @@ export default function TopTracks() {
     const [error, setError] = useState<string | null>(null);
     const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRange>('short_term');
     const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
-
-    useEffect(() => {
-        injectStatsStylesOnce();
-    }, []);
 
     useEffect(() => {
         let ignore = false;

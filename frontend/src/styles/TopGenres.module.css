@@ -1,0 +1,142 @@
+@keyframes rowIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.genreRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 2.5px solid var(--color-ink);
+  background-color: var(--color-paper);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.18s ease;
+  animation: rowIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.genreRow:hover {
+  transform: translate(-2px, -2px);
+}
+
+.genreHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rankBadge {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2.5px solid var(--color-ink);
+  background-color: var(--color-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.genreRow:hover .rankBadge {
+  transform: scale(1.1) rotate(-6deg);
+}
+
+.genreNameRow {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.genreName {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.genrePercentage {
+  color: var(--color-ink-soft);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.barTrack {
+  height: 14px;
+  border-radius: 999px;
+  border: 2px solid var(--color-ink);
+  background-color: var(--color-panel);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.barMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.barCount {
+  color: var(--color-ink-soft);
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.genrePills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.genrePill {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-ink);
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1.5px solid var(--color-ink);
+  white-space: nowrap;
+}
+
+.genrePillEmpty {
+  color: var(--color-ink-soft);
+  font-size: 12px;
+  font-family: var(--font-body);
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .genreRow,
+  .rankBadge {
+    animation: none !important;
+    transition: none !important;
+  }
+}

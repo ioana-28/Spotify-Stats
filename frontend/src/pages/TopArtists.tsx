@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { colors, fontBody } from '../theme';
+import { colors } from '../theme';
 import {
-    injectStatsStylesOnce,
     timeRangeOptions,
     StatsPageShell,
     StatsHeader,
@@ -13,6 +12,7 @@ import {
 } from '../assets/StatsShared';
 import type { TimeRange, StatsItem } from '../assets/StatsShared';
 import LogoutButton from '../components/LogoutButton';
+import styles from '../styles/TopArtists.module.css';
 
 const pillPalette = [colors.coral, colors.sky, colors.mint, colors.grape, colors.sunflower];
 
@@ -22,40 +22,16 @@ function formatGenre(genre: string) {
 
 function Pills({ items }: { items: string[] }) {
     if (!items || items.length === 0) {
-        return (
-            <span
-                style={{
-                    fontFamily: fontBody,
-                    fontSize: 11,
-                    fontWeight: 700,
-                    color: colors.inkSoft,
-                    padding: '3px 9px',
-                    borderRadius: 999,
-                    border: `1.5px dashed ${colors.inkSoft}`,
-                    whiteSpace: 'nowrap',
-                }}
-            >
-                No genres listed
-            </span>
-        );
+        return <span className={styles.pillEmpty}>No genres listed</span>;
     }
 
     return (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'inherit' }}>
+        <div className={styles.pills}>
             {items.slice(0, 2).map((item, i) => (
                 <span
                     key={item}
-                    style={{
-                        fontFamily: fontBody,
-                        fontSize: 11,
-                        fontWeight: 700,
-                        color: colors.ink,
-                        padding: '3px 9px',
-                        borderRadius: 999,
-                        border: `1.5px solid ${colors.ink}`,
-                        backgroundColor: `${pillPalette[i % pillPalette.length]}55`,
-                        whiteSpace: 'nowrap',
-                    }}
+                    className={styles.pill}
+                    style={{ backgroundColor: `${pillPalette[i % pillPalette.length]}55` }}
                 >
                     {formatGenre(item)}
                 </span>
@@ -85,10 +61,6 @@ export default function TopArtists() {
     const [error, setError] = useState<string | null>(null);
     const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRange>('short_term');
     const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
-
-    useEffect(() => {
-        injectStatsStylesOnce();
-    }, []);
 
     useEffect(() => {
         let ignore = false;
