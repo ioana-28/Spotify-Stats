@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import Sidebar from "../components/Sidebar";
 import LogoutButton from "../components/LogoutButton";
@@ -26,6 +26,32 @@ interface TimeCapsuleData {
     eras: EraCount[];
     changedFrom: string | null;
     createdAt: string | null;
+}
+
+interface EraHistoryEra {
+    decade: string;
+    count: number;
+    score: number;
+}
+
+interface EraHistoryEntry {
+    id: string;
+    createdAt: string;
+    dominantDecade: string;
+    tracksAnalyzed: number;
+    eras: EraHistoryEra[];
+}
+
+const RECENT_HISTORY_LIMIT = 10;
+
+function formatHistoryDate(value: string): string {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value;
+    return date.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+    });
 }
 
 const eraLabels: Record<string, string> = {
@@ -56,6 +82,12 @@ export default function Statistics() {
     );
     const [capsuleLoading, setCapsuleLoading] = useState(false);
     const [capsuleError, setCapsuleError] = useState<string | null>(null);
+
+    const [history, setHistory] = useState<EraHistoryEntry[]>([]);
+    const [historyLoading, setHistoryLoading] = useState(false);
+    const [historyError, setHistoryError] = useState<string | null>(null);
+    const [showAllHistory, setShowAllHistory] = useState(false);
+    const historyRequested = useRef(false);
 
     useEffect(() => {
         if (libraryData) return;
@@ -106,6 +138,34 @@ export default function Statistics() {
             });
     }, [capsuleData]);
 
+    useEffect(() => {
+        if (!capsuleData || historyRequested.current) return;
+        historyRequested.current = true;
+
+        setHistoryLoading(true);
+        setHistoryError(null);
+        fetch("http://127.0.0.1:5000/api/stats/time-capsule/history", {
+            credentials: "include",
+        })
+            .then((res) => {
+                if (res.status === 401) {
+                    window.location.href = "/login";
+                    return;
+                }
+                if (!res.ok)
+                    throw new Error("Failed to fetch your era history");
+                return res.json();
+            })
+            .then((data: { history: EraHistoryEntry[] }) => {
+                setHistory(data.history);
+                setHistoryLoading(false);
+            })
+            .catch((err) => {
+                setHistoryError(err.message);
+                setHistoryLoading(false);
+            });
+    }, [capsuleData]);
+
     const cards = [
         {
             title: "Liked Songs",
@@ -142,6 +202,11 @@ export default function Statistics() {
         1,
         ...erasWithTracks.map((era) => era.percentage),
     );
+
+    const orderedHistory = [...history].reverse();
+    const visibleHistory = showAllHistory
+        ? orderedHistory
+        : orderedHistory.slice(0, RECENT_HISTORY_LIMIT);
 
     return (
         <div className={styles.page}>
@@ -329,6 +394,123 @@ export default function Statistics() {
                             )}
                         </>
                     )}
+                </section>
+
+                {/* Era Timeline */}
+                <section className={styles.section}>
+                    <h2 className={styles.sectionTitle}>Era Timeline</h2>
+                    <p className={styles.sectionSubtitle}>
+                        How your decade mix has shifted over time. A new point
+                        is saved whenever it changes.
+                    </p>
+
+                    {historyLoading && (
+                        <p className={styles.statusText}>
+                            Reading your era history...
+                        </p>
+                    )}
+                    {historyError && (
+                        <p className={styles.errorText}>{historyError}</p>
+                    )}
+
+                    {!historyLoading &&
+                        !historyError &&
+                        orderedHistory.length === 0 && (
+                            <p className={styles.timelineEmpty}>
+                                No era changes recorded yet. This timeline grows
+                                as your listening shifts.
+                            </p>
+                        )}
+
+                    {!historyLoading &&
+                        !historyError &&
+                        orderedHistory.length > 0 && (
+                            <>
+                                <div className={styles.timelineList}>
+                                    {visibleHistory.map((entry, index) => {
+                                        const totalScore = entry.eras.reduce(
+                                            (sum, era) => sum + era.score,
+                                            0,
+                                        );
+                                        const erasWithScore = entry.eras.filter(
+                                            (era) => era.score > 0,
+                                        );
+                                        return (
+                                            <div
+                                                key={entry.id}
+                                                className={`${styles.timelineRow} ${styles.fade}`}
+                                                style={{
+                                                    animationDelay: `${index * 50}ms`,
+                                                }}
+                                            >
+                                                <div className={styles.timelineDate}>
+                                                    {formatHistoryDate(
+                                                        entry.createdAt,
+                                                    )}
+                                                </div>
+                                                <div
+                                                    className={styles.timelineBadge}
+                                                    style={{
+                                                        backgroundColor:
+                                                            eraColors[
+                                                                entry
+                                                                    .dominantDecade
+                                                            ] ??
+                                                            colors.sunflower,
+                                                    }}
+                                                >
+                                                    {entry.dominantDecade}
+                                                </div>
+                                                <div className={styles.timelineBar}>
+                                                    {totalScore > 0 &&
+                                                        erasWithScore.map((era) => {
+                                                            const percentage =
+                                                                Math.round(
+                                                                    (era.score /
+                                                                        totalScore) *
+                                                                        100,
+                                                                );
+                                                            return (
+                                                                <span
+                                                                    key={era.decade}
+                                                                    className={
+                                                                        styles.timelineSegment
+                                                                    }
+                                                                    style={{
+                                                                        width: `${percentage}%`,
+                                                                        backgroundColor:
+                                                                            eraColors[
+                                                                                era
+                                                                                    .decade
+                                                                            ] ??
+                                                                            colors.sunflower,
+                                                                    }}
+                                                                    title={`${era.decade}: ${percentage}%`}
+                                                                />
+                                                            );
+                                                        })}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                {orderedHistory.length >
+                                    RECENT_HISTORY_LIMIT && (
+                                    <button
+                                        type="button"
+                                        className={styles.timelineToggle}
+                                        onClick={() =>
+                                            setShowAllHistory((value) => !value)
+                                        }
+                                    >
+                                        {showAllHistory
+                                            ? "Show less"
+                                            : `Show all (${orderedHistory.length})`}
+                                    </button>
+                                )}
+                            </>
+                        )}
                 </section>
             </main>
         </div>

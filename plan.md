@@ -14,7 +14,7 @@ Last updated: 2026-11-25
 | 1 | Secure Spotify login | 🟢 Done | Token refresh + expiry, `state` validated, signed session cookie, refresh token encrypted at rest |
 | 2 | Top artists & top tracks | 🟢 Done | 10-item lists; artist and track snapshots decoupled (no cross-copy) |
 | 3 | Genre breakdown | 🟢 Done | MusicBrainz primary + Last.fm fallback; DB cache, throttling, broad categories |
-| 4 | Decade / release-year analysis | 🟢 Done | "Time Capsule" in Statistics; era history API unused by UI |
+| 4 | Decade / release-year analysis | 🟢 Done | Time Capsule + Era Timeline UI (newest-first, 10 + show-all); multi-range repeats kept by design |
 | 5 | Mainstream vs. underground score | 🔴 Not started | `artist.popularity` already available from Spotify |
 | 6 | Now playing widget | 🟢 Done | Live progress bar, paused state shows current track, podcast episodes handled |
 | 7 | Animated Wrapped slideshow + AI text | 🔴 Not started | Needs slideshow UI + LLM integration |
@@ -99,8 +99,11 @@ Use **`127.0.0.1` everywhere** — frontend, API, and the Spotify redirect URI. 
 - Optional env vars: `MUSICBRAINZ_USER_AGENT` (include contact/URL), `GENRE_MB_BUDGET`.
 
 ### Feature 4 — Decade / release-year analysis
-- [ ] Surface era history in the UI (endpoint `GET /api/stats/time-capsule/history` already exists).
-- [ ] Consider weighting by play rank vs. plain counts (document the choice).
+- [x] Surface era history in the UI: new **"Era Timeline"** section on Statistics using `GET /api/stats/time-capsule/history`.
+      - Newest-first; shows the latest 10 with a "Show all (N)" / "Show less" toggle.
+      - Each row: date, dominant-decade chip, and a stacked era bar (segment widths from each era's `score` share).
+      - History is fetched **after** the time-capsule call so the snapshot just saved is included; empty/loading/error states handled.
+- [x] Weighting decision: **keep the current triple-count** — a track that appears in multiple time ranges intentionally counts multiple times as a stronger long-term signal. No `eraService` change.
 
 ### Feature 6 — Now playing
 - [x] Render a progress bar using `progressMs` / `durationMs` already returned by the API.
@@ -174,3 +177,5 @@ Use **`127.0.0.1` everywhere** — frontend, API, and the Spotify redirect URI. 
 | 2026-11-25 | 2 | Top lists: decoupled artist/track snapshots, removed cross-copy; page limit kept at 10 | `tsc --noEmit` (backend) |
 | 2026-11-25 | 2 | Genres: MusicBrainz primary + Last.fm fallback, `ArtistGenreCache` (migration `20261125201710_add_artist_genre_cache`), throttling/concurrency, broad category mapping, empty state | `tsc` (backend/frontend); live pipeline test (4.9s cold → 0.7s warm) |
 | 2026-11-25 | 2 | Genres: fixed "Other" dominating — expanded junk filter (decades, locations, artist-name tags, generic phrases), excluded Other from the chart, re-cleaned cached rows, retry MusicBrainz genre-list fetch | `tsc` (backend); live check: Other removed, Pop now #1 |
+| 2026-11-25 | 2 | Genres page: removed artist counts and artist pills (category/percentage/bar only); unused CSS cleaned | `tsc -b` (frontend) |
+| 2026-11-25 | 2 | Era analysis: added Era Timeline UI (newest-first, latest 10 + show-all toggle, stacked era bars); kept multi-range weighting by design | `tsc -b` (frontend) |
