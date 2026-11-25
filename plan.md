@@ -16,7 +16,7 @@ Last updated: 2026-11-25
 | 3 | Genre breakdown | 🟢 Done | Spotify `artist.genres` deprecated; Last.fm fallback unthrottled |
 | 4 | Decade / release-year analysis | 🟢 Done | "Time Capsule" in Statistics; era history API unused by UI |
 | 5 | Mainstream vs. underground score | 🔴 Not started | `artist.popularity` already available from Spotify |
-| 6 | Now playing widget | 🟢 Done | Polls every 10s; progress bar not rendered |
+| 6 | Now playing widget | 🟢 Done | Live progress bar, paused state shows current track, podcast episodes handled |
 | 7 | Animated Wrapped slideshow + AI text | 🔴 Not started | Needs slideshow UI + LLM integration |
 | 8 | Friend comparison | 🔴 Not started | Needs invite/consent tables + matching |
 | 9 | Listening history & activity patterns | 🔴 Not started | Spotify only returns last 50 plays; needs periodic sync |
@@ -85,8 +85,10 @@ Use **`127.0.0.1` everywhere** — frontend, API, and the Spotify redirect URI. 
 - [ ] Consider weighting by play rank vs. plain counts (document the choice).
 
 ### Feature 6 — Now playing
-- [ ] Render a progress bar using `progressMs` / `durationMs` already returned by the API.
-- [ ] Show a paused/ended state cleanly and avoid `Left: -1s` style bugs when polling lags.
+- [x] Render a progress bar using `progressMs` / `durationMs` already returned by the API.
+- [x] Show a paused/ended state cleanly and avoid `Left: -1s` style bugs when polling lags.
+      The bar ticks locally every 1s between 10s polls; paused state keeps the current track visible.
+- [x] Handle podcast episodes (request `additional_types=track,episode`, image from `item.images` or `item.show.images`, show name instead of artist, no album).
 
 ---
 
@@ -148,3 +150,4 @@ Use **`127.0.0.1` everywhere** — frontend, API, and the Spotify redirect URI. 
 | 2026-11-23 | — | Created plan; audited codebase (5/9 features done) | code review |
 | 2026-11-25 | 1 | Login fixed: token refresh + `expiresAt`, `state` check, signed cookie, removed `/session` bypass, encrypted refresh token, env-driven redirects | `tsc --noEmit`, prisma migrate, crypto round-trip test |
 | 2026-11-25 | 1 | Local dev aligned to `127.0.0.1` (frontend fetches, login link, `FRONTEND_URL`, redirect URI) after `localhost`/`127.0.0.1` cookie-host mismatch | Spotify redirect URI acceptance + manual login |
+| 2026-11-25 | 2 | Now playing: live progress bar (local 1s tick), paused state keeps track visible, podcast episodes handled | `tsc --noEmit` (backend), `tsc -b` (frontend); manual pending |

@@ -47,26 +47,49 @@ export const getCurrentlyPlayingTrack = async (req: Request, res: Response) => {
 
         const accessToken = await getValidAccessToken(user, prisma);
 
-        const response = await axios.get('https://api.spotify.com/v1/me/player/currently-playing', {
+        const response = await axios.get('https://api.spotify.com/v1/me/player/currently-playing?additional_types=track,episode', {
             headers: { Authorization: `Bearer ${accessToken}` },
             validateStatus: (status) => status === 200 || status === 204,
         });
 
-        if (response.status === 204 || !response.data || !response.data.item) {
-           return res.json({ isPlaying: false, track: null });
+        if (response.status === 204 || !response.data) {
+           return res.json({ isPlaying: false, progressMs: 0, type: 'track', track: null });
         }
 
-        const item = response.data.item;
+        const playback = response.data;
+        const item = playback.item;
+
+        if (!item) {
+            if (playback.currently_playing_type && playback.currently_playing_type !== 'unknown') {
+                console.warn('[currently-playing] Spotify returned no item', {
+                    currentlyPlayingType: playback.currently_playing_type,
+                    contextType: playback.context?.type ?? null,
+                });
+            }
+            return res.json({
+                isPlaying: Boolean(playback.is_playing),
+                progressMs: playback.progress_ms ?? 0,
+                type: playback.currently_playing_type === 'episode' ? 'episode' : 'track',
+                track: null,
+            });
+        }
+
+        const isEpisode = item.type === 'episode';
         return res.json({
-            isPlaying: response.data.is_playing,
-            progressMs: response.data.progress_ms,
+            isPlaying: playback.is_playing,
+            progressMs: playback.progress_ms ?? 0,
+            type: isEpisode ? 'episode' : 'track',
             track: {
                 id: item.id,
                 name: item.name,
-                artist: item.artists?.map((a: any) => a.name).join(', ') || 'Unknown Artist',
-                album: item.album?.name || '',
-                imageUrl: item.album?.images?.[0]?.url || null,
-                durationMs: item.duration_ms,
+                artist: isEpisode
+                    ? (item.show?.name || 'Podcast')
+                    : (item.artists?.map((a: any) => a.name).join(', ') || 'Unknown Artist'),
+                album: isEpisode ? '' : (item.album?.name || ''),
+                imageUrl: (isEpisode
+                    ? (item.images?.[0]?.url ?? item.show?.images?.[0]?.url)
+                    : item.album?.images?.[0]?.url) || null,
+                durationMs: item.duration_ms ?? 0,
             },
         });
     }

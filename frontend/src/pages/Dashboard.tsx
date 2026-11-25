@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
-import { Mic2, Music, Star, Disc3, Radio } from 'lucide-react';
+import { Mic2, Music, Star, Disc3, Radio, Pause } from 'lucide-react';
 import { colors } from '../theme';
 import LogoutButton from '../components/LogoutButton';
 import styles from '../styles/Dashboard.module.css';
@@ -30,15 +30,31 @@ interface DashboardData {
   tracks: TopTrack[];
 }
 
-interface CurrentlyPlaying {
+interface CurrentlyPlayingTrack {
+  id: string;
+  name: string;
+  artist: string;
+  album: string;
+  imageUrl: string | null;
+  durationMs: number;
+}
+
+interface CurrentlyPlayingResponse {
   isPlaying: boolean;
-  track: {
-    id: string;
-    name: string;
-    artist: string;
-    album: string;
-    imageUrl: string | null;
-  } | null;
+  progressMs: number;
+  type: 'track' | 'episode';
+  track: CurrentlyPlayingTrack | null;
+}
+
+interface CurrentlyPlaying extends CurrentlyPlayingResponse {
+  fetchedAt: number;
+}
+
+function formatTime(ms: number): string {
+  const totalSeconds = Math.floor(Math.max(0, ms) / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
 export default function Dashboard() {
@@ -46,6 +62,7 @@ export default function Dashboard() {
     const [data, setData] = useState<DashboardData>({ artists: [], tracks: [] });  
     const [error, setError] = useState<string | null>(null);  
     const [currentlyPlaying, setCurrentlyPlaying] = useState<CurrentlyPlaying | null>(null);
+    const [now, setNow] = useState(() => Date.now());
 
     useEffect(() => {
         fetch('http://127.0.0.1:5000/api/dashboard', { credentials: 'include' })
@@ -74,8 +91,10 @@ export default function Dashboard() {
             if (!res.ok) return null;
             return res.json();
           })
-          .then((data) => {
-            if (data) setCurrentlyPlaying(data);
+          .then((data: CurrentlyPlayingResponse | null) => {
+            if (data) {
+              setCurrentlyPlaying({ ...data, fetchedAt: Date.now() });
+            }
           })
           .catch(() => {});
       };
@@ -83,6 +102,28 @@ export default function Dashboard() {
       const interval = setInterval(fetchCurrentlyPlaying, 10000);
       return () => clearInterval(interval);
     }, []);
+
+    useEffect(() => {
+      if (!currentlyPlaying?.isPlaying) return;
+      const interval = setInterval(() => setNow(Date.now()), 1000);
+      return () => clearInterval(interval);
+    }, [currentlyPlaying?.isPlaying]);
+
+    const track = currentlyPlaying?.track ?? null;
+    const durationMs = track?.durationMs ?? 0;
+    const elapsed = currentlyPlaying?.isPlaying
+      ? Math.max(0, now - currentlyPlaying.fetchedAt)
+      : 0;
+    const rawProgress = (currentlyPlaying?.progressMs ?? 0) + elapsed;
+    const progressMs = durationMs > 0 ? Math.min(durationMs, rawProgress) : rawProgress;
+    const progressPercent =
+      durationMs > 0 ? Math.min(100, (progressMs / durationMs) * 100) : 0;
+    const hasTrack = Boolean(track);
+    const statusLabel = !hasTrack
+      ? 'Idle'
+      : currentlyPlaying?.isPlaying
+        ? 'Now Playing'
+        : 'Paused';
 
 
     return (
@@ -98,10 +139,10 @@ export default function Dashboard() {
 
         <section className={styles.nowPlaying}>
           <div className={styles.nowPlayingInner}>
-            {currentlyPlaying?.isPlaying && currentlyPlaying.track?.imageUrl ? (
+            {track?.imageUrl ? (
               <img
-                src={currentlyPlaying.track.imageUrl}
-                alt={currentlyPlaying.track.name}
+                src={track.imageUrl}
+                alt={track.name}
                 className={styles.nowPlayingArt}
               />
             ) : (
@@ -125,24 +166,35 @@ export default function Dashboard() {
                       ))}
                     </span>
                   </>
+                ) : hasTrack ? (
+                  <Pause size={14} color={colors.inkSoft} strokeWidth={3} />
                 ) : (
                   <Radio size={14} color={colors.inkSoft} strokeWidth={3} />
                 )}
-                <span className={styles.statusLabel}>
-                  {currentlyPlaying?.isPlaying ? 'Now Playing' : 'Spotify Paused / Idle'}
-                </span>
+                <span className={styles.statusLabel}>{statusLabel}</span>
               </div>
 
               <div className={styles.trackName}>
-                {currentlyPlaying?.isPlaying && currentlyPlaying.track
-                  ? currentlyPlaying.track.name
-                  : 'Nothing playing right now'}
+                {track ? track.name : 'Nothing playing right now'}
               </div>
               <div className={styles.trackMeta}>
-                {currentlyPlaying?.isPlaying && currentlyPlaying.track
-                  ? `${currentlyPlaying.track.artist} \u00b7 ${currentlyPlaying.track.album}`
+                {track
+                  ? [track.artist, track.album].filter(Boolean).join(' \u00b7 ')
                   : 'Play a track on Spotify to see live playback'}
               </div>
+
+              {track && durationMs > 0 && (
+                <div className={styles.progressRow}>
+                  <span className={styles.progressTime}>{formatTime(progressMs)}</span>
+                  <div className={styles.progressTrack}>
+                    <div
+                      className={styles.progressFill}
+                      style={{ width: `${progressPercent}%` }}
+                    />
+                  </div>
+                  <span className={styles.progressTime}>{formatTime(durationMs)}</span>
+                </div>
+              )}
             </div>
           </div>
         </section>
