@@ -11,8 +11,6 @@ interface GenreStat {
     genre: string;
     score: number;
     percentage: number;
-    count: number;
-    topArtists: string[];
 }
 
 const timeRangeOptions: { id: TimeRange; label: string }[] = [
@@ -28,25 +26,6 @@ const subtitles: Record<TimeRange, string> = {
 };
 
 const barPalette = [colors.coral, colors.sky, colors.mint, colors.grape, colors.sunflower];
-
-function GenrePills({ artists }: { artists: string[] }) {
-    if (!artists || artists.length === 0) {
-        return <span className={styles.genrePillEmpty}>No artists listed</span>;
-    }
-    return (
-        <div className={styles.genrePills}>
-            {artists.slice(0, 3).map((artist, i) => (
-                <span
-                    key={artist}
-                    className={styles.genrePill}
-                    style={{ backgroundColor: `${barPalette[i % barPalette.length]}55` }}
-                >
-                    {artist}
-                </span>
-            ))}
-        </div>
-    );
-}
 
 export default function TopGenres() {
     const [loading, setLoading] = useState(true);
@@ -186,14 +165,6 @@ export default function TopGenres() {
                                                     transitionDelay: `${i * 60}ms`,
                                                 }}
                                             />
-                                        </div>
-
-                                        <div className={styles.barMeta}>
-                                            <span className={styles.barCount}>
-                                                {genre.count} artist{genre.count === 1 ? '' : 's'}{' '}
-                                                {'\u00b7'}
-                                            </span>
-                                            <GenrePills artists={genre.topArtists} />
                                         </div>
                                     </div>
                                 );
