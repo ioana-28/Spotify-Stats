@@ -57,6 +57,7 @@
 .page {
   display: flex;
   min-height: 100vh;
+  padding-right: var(--logout-gutter);
   background-color: var(--color-ink);
 }
 
@@ -369,6 +370,12 @@
   color: var(--color-ink-soft);
   font-size: 14px;
   font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .page {
+    padding-right: 0;
+  }
 }
 
 @media (max-width: 640px) {

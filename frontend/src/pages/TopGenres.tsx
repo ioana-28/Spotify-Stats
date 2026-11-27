@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
-import LogoutButton from '../components/LogoutButton';
 import { colors } from '../theme';
 import shared from '../styles/StatsShared.module.css';
 import styles from '../styles/TopGenres.module.css';
@@ -75,7 +74,6 @@ export default function TopGenres() {
 
     return (
         <div className={`${shared.pageBg} ${shared.shell}`}>
-            <LogoutButton />
             <Sidebar />
             <main className={shared.main}>
                 <section className={shared.section}>

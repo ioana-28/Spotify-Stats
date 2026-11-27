@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import Sidebar from "../components/Sidebar";
-import LogoutButton from "../components/LogoutButton";
 import { Music, Disc, Tv, Mic, Clock } from "lucide-react";
 import { colors } from "../theme";
 import styles from "../styles/Statistics.module.css";
@@ -210,7 +209,6 @@ export default function Statistics() {
 
     return (
         <div className={styles.page}>
-            <LogoutButton />
             <Sidebar />
             <main className={styles.main}>
                 {/* Library Size */}

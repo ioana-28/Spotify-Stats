@@ -51,7 +51,7 @@
 
 .pageBg {
   background-image: radial-gradient(
-    var(--color-ink-14) 1.4px,
+    var(--color-canvas-dot) 1.4px,
     transparent 1.4px
   );
   background-size: 18px 18px;
@@ -60,6 +60,7 @@
 .shell {
   display: flex;
   min-height: 100vh;
+  padding-right: var(--logout-gutter);
   background-color: var(--color-ink);
 }
 
@@ -391,6 +392,10 @@
 }
 
 @media (max-width: 680px) {
+  .shell {
+    padding-right: 0;
+  }
+
   .podiumRow {
     flex-direction: column;
   }

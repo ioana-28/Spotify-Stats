@@ -1,0 +1,102 @@
+/* ================================================================
+   Palette: "Matcha Rose"
+   Saved from mockups/dashboard, 2026-11-26.
+
+   Sand surfaces, olive ink, a rose accent, matcha log out and
+   lavender text on a near-black canvas.
+
+   Raw palette
+   -----------
+   --text        #c7aad1   lavender — title, subtitle, artwork
+   --background  #0a0f05   near-black — canvas, borders, text on cards
+   --primary     #d9d1bd   sand — sidebar, cards
+   --secondary   #304a1e   olive — active nav, Tracks chip, shadows
+   --accent      #dd709f   rose — badges, progress
+   --matcha      #b7d09a   light green — log out
+
+   Everything below the raw palette is derived from it. Hex values
+   in the comments are the computed result at the time of saving.
+   ================================================================ */
+
+:root {
+  /* Raw palette -------------------------------------------------- */
+  --text: #c7aad1;
+  --background: #0a0f05;
+  --primary: #d9d1bd;
+  --secondary: #304a1e;
+  --accent: #dd709f;
+  --matcha: #b7d09a;
+
+  /* Canvas: near-black ------------------------------------------ */
+  --canvas: var(--background);                     /* #0a0f05 */
+  --canvas-ink: var(--text);                       /* #c7aad1 */
+  --canvas-ink-soft: color-mix(
+    in srgb,
+    var(--text) 70%,
+    var(--background)
+  );                                               /* #8e7c94 */
+  --dot: color-mix(in srgb, var(--primary) 10%, transparent);
+                                                   /* rgba(217,209,189,.10) */
+
+  /* Panels: sand ------------------------------------------------ */
+  --panel: var(--primary);                         /* #d9d1bd */
+  --surface: color-mix(in srgb, var(--primary) 92%, var(--secondary));
+                                                   /* ~ #cbc6b0 */
+  --panel-ink: var(--background);                  /* #0a0f05 */
+  --panel-ink-soft: color-mix(
+    in srgb,
+    var(--background) 62%,
+    var(--primary)
+  );                                               /* #59594b */
+  --panel-hover: color-mix(
+    in srgb,
+    var(--background) 8%,
+    var(--primary)
+  );                                               /* #c8c1ae */
+  --canvas-hairline: color-mix(
+    in srgb,
+    var(--background) 20%,
+    transparent
+  );                                               /* rgba(10,15,5,.20) */
+  --hairline: color-mix(in srgb, var(--background) 16%, transparent);
+                                                   /* rgba(10,15,5,.16) */
+
+  /* Outlines and depth ------------------------------------------ */
+  --line: var(--background);                       /* #0a0f05 */
+  --panel-line: var(--background);                 /* #0a0f05 */
+  --shadow: var(--secondary);                      /* ~ #304a1e */
+
+  /* Nav accents: dark fills, readable with sand text ------------ */
+  --nav-1: var(--secondary);                       /* ~ #304a1e */
+  --nav-2: var(--background);                      /* #0a0f05 */
+  --nav-3: color-mix(
+    in srgb,
+    var(--secondary) 55%,
+    var(--background)
+  );                                               /* #1f2f13 */
+  --nav-4: var(--secondary);                       /* ~ #304a1e */
+  --nav-5: color-mix(
+    in srgb,
+    var(--secondary) 70%,
+    var(--background)
+  );                                               /* ~ #253817 */
+
+  /* Artwork gradients: light, with dark letters, no accent ------ */
+  --art-a: linear-gradient(135deg, var(--text), var(--primary));
+                                                   /* #c7aad1 → #d9d1bd */
+  --art-b: linear-gradient(
+    135deg,
+    var(--primary),
+    color-mix(in srgb, var(--primary) 65%, var(--secondary))
+  );                                               /* #d9d1bd → #9ea285 */
+  --art-c: linear-gradient(
+    135deg,
+    var(--text),
+    color-mix(in srgb, var(--text) 55%, var(--primary))
+  );                                               /* #c7aad1 → #cfbcc8 */
+
+  /* Sticker shadows --------------------------------------------- */
+  --sticker-2: 2px 2px 0 var(--shadow);
+  --sticker-3: 3px 3px 0 var(--shadow);
+  --sticker-4: 4px 4px 0 var(--shadow);
+}

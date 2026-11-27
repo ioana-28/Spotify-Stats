@@ -1,0 +1,402 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-27T22:41:04Z",
+  "title": "Design System: Spotify Stats",
+  "extensions": {
+    "colorMeta": {
+      "near-black-canvas": {
+        "role": "neutral",
+        "displayName": "Near-Black Canvas",
+        "canonical": "#0a0f05",
+        "tonalRamp": [
+          "color-mix(in srgb, #0a0f05 30%, #000000)",
+          "color-mix(in srgb, #0a0f05 55%, #000000)",
+          "color-mix(in srgb, #0a0f05 80%, #000000)",
+          "#0a0f05",
+          "color-mix(in srgb, #0a0f05 82%, #ffffff)",
+          "color-mix(in srgb, #0a0f05 62%, #ffffff)",
+          "color-mix(in srgb, #0a0f05 42%, #ffffff)",
+          "color-mix(in srgb, #0a0f05 24%, #ffffff)"
+        ]
+      },
+      "sand": {
+        "role": "neutral",
+        "displayName": "Sand Paper",
+        "canonical": "#d9d1bd",
+        "tonalRamp": [
+          "color-mix(in srgb, #d9d1bd 30%, #0a0f05)",
+          "color-mix(in srgb, #d9d1bd 45%, #0a0f05)",
+          "color-mix(in srgb, #d9d1bd 60%, #0a0f05)",
+          "color-mix(in srgb, #d9d1bd 78%, #0a0f05)",
+          "#d9d1bd",
+          "color-mix(in srgb, #d9d1bd 82%, #ffffff)",
+          "color-mix(in srgb, #d9d1bd 62%, #ffffff)",
+          "color-mix(in srgb, #d9d1bd 42%, #ffffff)"
+        ]
+      },
+      "deep-sand": {
+        "role": "neutral",
+        "displayName": "Deep Sand",
+        "canonical": "#cbc6b0",
+        "tonalRamp": [
+          "color-mix(in srgb, #cbc6b0 30%, #0a0f05)",
+          "color-mix(in srgb, #cbc6b0 45%, #0a0f05)",
+          "color-mix(in srgb, #cbc6b0 60%, #0a0f05)",
+          "color-mix(in srgb, #cbc6b0 78%, #0a0f05)",
+          "#cbc6b0",
+          "color-mix(in srgb, #cbc6b0 82%, #ffffff)",
+          "color-mix(in srgb, #cbc6b0 62%, #ffffff)",
+          "color-mix(in srgb, #cbc6b0 42%, #ffffff)"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Ink Soft",
+        "canonical": "#59594b",
+        "tonalRamp": [
+          "color-mix(in srgb, #59594b 30%, #0a0f05)",
+          "color-mix(in srgb, #59594b 45%, #0a0f05)",
+          "color-mix(in srgb, #59594b 60%, #0a0f05)",
+          "color-mix(in srgb, #59594b 78%, #0a0f05)",
+          "#59594b",
+          "color-mix(in srgb, #59594b 82%, #ffffff)",
+          "color-mix(in srgb, #59594b 62%, #ffffff)",
+          "color-mix(in srgb, #59594b 42%, #ffffff)"
+        ]
+      },
+      "cream-canvas-text": {
+        "role": "neutral",
+        "displayName": "Cream Canvas Text",
+        "canonical": "#d9d1bd"
+      },
+      "muted-cream": {
+        "role": "neutral",
+        "displayName": "Muted Cream",
+        "canonical": "#cbc6b0"
+      },
+      "rose": {
+        "role": "primary",
+        "displayName": "Matcha Rose",
+        "canonical": "#dd709f",
+        "tonalRamp": [
+          "color-mix(in srgb, #dd709f 30%, #0a0f05)",
+          "color-mix(in srgb, #dd709f 45%, #0a0f05)",
+          "color-mix(in srgb, #dd709f 60%, #0a0f05)",
+          "color-mix(in srgb, #dd709f 78%, #0a0f05)",
+          "#dd709f",
+          "color-mix(in srgb, #dd709f 82%, #ffffff)",
+          "color-mix(in srgb, #dd709f 62%, #ffffff)",
+          "color-mix(in srgb, #dd709f 42%, #ffffff)"
+        ]
+      },
+      "olive": {
+        "role": "secondary",
+        "displayName": "Sticker Olive",
+        "canonical": "#304a1e",
+        "tonalRamp": [
+          "color-mix(in srgb, #304a1e 30%, #0a0f05)",
+          "color-mix(in srgb, #304a1e 45%, #0a0f05)",
+          "color-mix(in srgb, #304a1e 60%, #0a0f05)",
+          "color-mix(in srgb, #304a1e 78%, #0a0f05)",
+          "#304a1e",
+          "color-mix(in srgb, #304a1e 82%, #ffffff)",
+          "color-mix(in srgb, #304a1e 62%, #ffffff)",
+          "color-mix(in srgb, #304a1e 42%, #ffffff)"
+        ]
+      },
+      "olive-deep": {
+        "role": "secondary",
+        "displayName": "Deep Olive",
+        "canonical": "#1f2f13"
+      },
+      "olive-forest": {
+        "role": "secondary",
+        "displayName": "Forest Olive",
+        "canonical": "#253817"
+      },
+      "matcha": {
+        "role": "tertiary",
+        "displayName": "Matcha",
+        "canonical": "#b7d09a",
+        "tonalRamp": [
+          "color-mix(in srgb, #b7d09a 30%, #0a0f05)",
+          "color-mix(in srgb, #b7d09a 45%, #0a0f05)",
+          "color-mix(in srgb, #b7d09a 60%, #0a0f05)",
+          "color-mix(in srgb, #b7d09a 78%, #0a0f05)",
+          "#b7d09a",
+          "color-mix(in srgb, #b7d09a 82%, #ffffff)",
+          "color-mix(in srgb, #b7d09a 62%, #ffffff)",
+          "color-mix(in srgb, #b7d09a 42%, #ffffff)"
+        ]
+      },
+      "gold": {
+        "role": "tertiary",
+        "displayName": "Podium Gold",
+        "canonical": "#c2a76a",
+        "tonalRamp": [
+          "color-mix(in srgb, #c2a76a 30%, #0a0f05)",
+          "color-mix(in srgb, #c2a76a 45%, #0a0f05)",
+          "color-mix(in srgb, #c2a76a 60%, #0a0f05)",
+          "color-mix(in srgb, #c2a76a 78%, #0a0f05)",
+          "#c2a76a",
+          "color-mix(in srgb, #c2a76a 82%, #ffffff)",
+          "color-mix(in srgb, #c2a76a 62%, #ffffff)",
+          "color-mix(in srgb, #c2a76a 42%, #ffffff)"
+        ]
+      },
+      "sage": {
+        "role": "tertiary",
+        "displayName": "Sage Mint",
+        "canonical": "#8fae7c"
+      },
+      "lavender": {
+        "role": "tertiary",
+        "displayName": "Categorical Lavender",
+        "canonical": "#ad95c9"
+      },
+      "teal": {
+        "role": "tertiary",
+        "displayName": "Categorical Teal",
+        "canonical": "#7fa8a1"
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Ink Hairline",
+        "canonical": "rgba(10, 15, 5, 0.08)"
+      },
+      "canvas-dot": {
+        "role": "neutral",
+        "displayName": "Canvas Dot",
+        "canonical": "rgba(217, 209, 189, 0.09)"
+      },
+      "skeleton": {
+        "role": "neutral",
+        "displayName": "Skeleton Sand",
+        "canonical": "#c9c2ae"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page titles on the dark canvas; shrinks to 28px on phones."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Now-playing title, section titles, and capsule headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card headings, list-row names, and podium names."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Subtitles, descriptions, navigation labels, and metadata."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase eyebrows, status labels, times, and counts."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sticker-2",
+        "value": "2px 2px 0 #304a1e",
+        "purpose": "Selected tabs, small chips, stat cards."
+      },
+      {
+        "name": "sticker-3",
+        "value": "3px 3px 0 #304a1e",
+        "purpose": "Active nav items, icon buttons, badges."
+      },
+      {
+        "name": "sticker-4",
+        "value": "4px 4px 0 #304a1e",
+        "purpose": "Bento cards, list rows, error cards, login CTA."
+      },
+      {
+        "name": "sticker-6",
+        "value": "6px 6px 0 #304a1e",
+        "purpose": "Login card and first-place podium card."
+      },
+      {
+        "name": "cta-hover-ink",
+        "value": "6px 6px 0 #0a0f05",
+        "purpose": "Login CTA hover only; the single non-olive sticker shadow."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-spring",
+        "value": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "purpose": "Playful hover lifts, rank-badge twist, CTA press."
+      },
+      {
+        "name": "ease-out-soft",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Card, podium, and row entrance animations."
+      },
+      {
+        "name": "pulse",
+        "value": "1.8s ease-in-out infinite",
+        "purpose": "Live now-playing dot."
+      },
+      {
+        "name": "shimmer",
+        "value": "1.4s ease-in-out infinite",
+        "purpose": "Skeleton loading surfaces."
+      },
+      {
+        "name": "progress",
+        "value": "width 1s linear",
+        "purpose": "Now-playing progress fill."
+      },
+      {
+        "name": "vinyl-spin",
+        "value": "9s linear infinite",
+        "purpose": "Login vinyl illustration."
+      }
+    ],
+    "breakpoints": [
+      { "name": "bento-stack", "value": "1020px" },
+      { "name": "rail", "value": "720px" },
+      { "name": "podium-stack", "value": "680px" },
+      { "name": "timeline-wrap", "value": "640px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary CTA",
+      "kind": "button",
+      "refersTo": "button-cta",
+      "description": "Sage-mint pill that starts the Spotify connection on the login screen.",
+      "html": "<button class='ds-cta'><svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg>Connect with Spotify</button>",
+      "css": ".ds-cta{display:inline-flex;align-items:center;gap:10px;background-color:var(--color-mint,#8fae7c);color:var(--color-ink,#0a0f05);border:2.5px solid var(--color-ink,#0a0f05);border-radius:999px;padding:14px 30px;font-family:var(--font-display,'Fredoka',sans-serif);font-weight:600;font-size:16px;cursor:pointer;box-shadow:var(--sticker-4,4px 4px 0 #304a1e);transition:transform .16s cubic-bezier(.34,1.56,.64,1),box-shadow .16s ease}.ds-cta:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--color-ink,#0a0f05)}.ds-cta:active{transform:translate(1px,1px) scale(.97);box-shadow:2px 2px 0 var(--color-ink,#0a0f05)}.ds-cta:focus-visible{outline:2.5px solid var(--color-ink,#0a0f05);outline-offset:3px}"
+    },
+    {
+      "name": "Log-out Icon Button",
+      "kind": "button",
+      "refersTo": "button-icon",
+      "description": "Fixed top-right matcha circle; icon only, with aria-label. Position is fixed in the app and omitted here for a clean preview tile.",
+      "html": "<button class='ds-logout' aria-label='Log out' title='Log out'><svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4'/><polyline points='16 17 21 12 16 7'/><line x1='21' x2='9' y1='12' y2='12'/></svg></button>",
+      "css": ".ds-logout{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;background-color:var(--color-matcha,#b7d09a);color:var(--color-ink,#0a0f05);border:2px solid var(--color-ink,#0a0f05);border-radius:999px;box-shadow:var(--sticker-3,3px 3px 0 #304a1e);cursor:pointer;transition:transform .1s ease,box-shadow .1s ease}.ds-logout:hover{transform:translate(-1px,-1px);box-shadow:var(--sticker-4,4px 4px 0 #304a1e)}.ds-logout:focus-visible{outline:2.5px solid var(--color-ink,#0a0f05);outline-offset:2px}"
+    },
+    {
+      "name": "Sidebar Nav Item",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "Full-width sidebar row; inactive is transparent sand, active fills with a dark olive accent and sand text.",
+      "html": "<a class='ds-nav ds-nav-active' href='#'><svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/><polyline points='9 22 9 12 15 12 15 22'/></svg><span>Overview</span></a>",
+      "css": ".ds-nav{display:flex;align-items:center;gap:10px;box-sizing:border-box;width:100%;padding:10px 15px;border-radius:12px;border:2.5px solid var(--color-ink,#0a0f05);background-color:transparent;color:var(--color-ink-soft,#59594b);font-family:var(--font-body,'Nunito',sans-serif);font-weight:700;font-size:14px;text-align:left;text-decoration:none;cursor:pointer;transition:transform .1s,box-shadow .1s,background-color .1s}.ds-nav:hover{background-color:var(--color-paper,#cbc6b0)}.ds-nav-active{background-color:var(--color-shadow,#304a1e);color:var(--color-panel,#d9d1bd);font-weight:800;box-shadow:var(--sticker-3,3px 3px 0 #304a1e);transform:translate(-1px,-1px)}.ds-nav:focus-visible{outline:2.5px solid var(--color-ink,#0a0f05);outline-offset:2px}"
+    },
+    {
+      "name": "Time-range Tab",
+      "kind": "button",
+      "refersTo": "tab-active",
+      "description": "Deep-sand tab pills; the selected range fills gold and lifts with sticker-2.",
+      "html": "<div class='ds-tabs'><button class='ds-tab ds-tab-active'>Last month</button><button class='ds-tab'>Last year</button></div>",
+      "css": ".ds-tabs{display:flex;gap:12px;flex-wrap:wrap}.ds-tab{padding:10px 20px;border-radius:12px;border:2.5px solid var(--color-ink,#0a0f05);background-color:var(--color-paper,#cbc6b0);color:var(--color-ink,#0a0f05);font-family:var(--font-display,'Fredoka',sans-serif);font-weight:600;font-size:14px;cursor:pointer;box-shadow:none;transition:transform .16s cubic-bezier(.34,1.56,.64,1),box-shadow .16s ease,background-color .16s ease}.ds-tab:hover{transform:translate(-1px,-1px)}.ds-tab:active{transform:translate(1px,1px) scale(.97)}.ds-tab:focus-visible{outline:2.5px solid var(--color-ink,#0a0f05);outline-offset:2px}.ds-tab-active{background-color:var(--color-sunflower,#c2a76a);box-shadow:var(--sticker-2,2px 2px 0 #304a1e);transform:translate(-1px,-1px)}"
+    },
+    {
+      "name": "Bento Card",
+      "kind": "card",
+      "refersTo": "card-bento",
+      "description": "Sand paper tile with an ink outline and hard olive shadow; carries the list head chip and metadata.",
+      "html": "<div class='ds-card'><div class='ds-card-head'><span class='ds-chip'><svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg></span><h3 class='ds-card-title'>Artists</h3><span class='ds-card-meta'>Top 5</span></div></div>",
+      "css": ".ds-card{background-color:var(--color-panel,#d9d1bd);border:2.5px solid var(--color-ink,#0a0f05);border-radius:20px;box-shadow:var(--sticker-4,4px 4px 0 #304a1e);padding:20px}.ds-card-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}.ds-chip{display:grid;place-items:center;width:28px;height:28px;flex-shrink:0;border:2px solid var(--color-ink,#0a0f05);border-radius:8px;background-color:var(--color-shadow,#304a1e);color:var(--color-panel,#d9d1bd)}.ds-card-title{margin:0;color:var(--color-ink,#0a0f05);font-family:var(--font-display,'Fredoka',sans-serif);font-size:17px;font-weight:600}.ds-card-meta{margin-left:auto;color:var(--color-ink-soft,#59594b);font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;font-weight:800;white-space:nowrap}"
+    },
+    {
+      "name": "Ranked List Row",
+      "kind": "custom",
+      "refersTo": "list-row",
+      "description": "Deep-sand sticker row with a circular rank badge and avatar; lifts as a unit on hover.",
+      "html": "<div class='ds-row'><span class='ds-rank'>4</span><span class='ds-avatar'></span><span class='ds-row-body'><span class='ds-row-title'>Artist name</span><span class='ds-row-sub'>indie pop</span></span></div>",
+      "css": ".ds-row{display:flex;align-items:center;gap:12px;padding:10px 15px;border-radius:12px;border:2.5px solid var(--color-ink,#0a0f05);background-color:var(--color-paper,#cbc6b0);transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .18s ease}.ds-row:hover{transform:translate(-2px,-2px)}.ds-rank{display:flex;align-items:center;justify-content:center;width:42px;height:42px;flex-shrink:0;border-radius:50%;border:2.5px solid var(--color-ink,#0a0f05);background-color:var(--color-panel,#d9d1bd);color:var(--color-ink,#0a0f05);font-family:var(--font-display,'Fredoka',sans-serif);font-weight:600;font-size:14px}.ds-avatar{width:46px;height:46px;flex-shrink:0;border-radius:50%;border:2.5px solid var(--color-ink,#0a0f05);background-color:var(--color-panel,#d9d1bd)}.ds-row-body{display:flex;flex-direction:column;gap:4px;min-width:0}.ds-row-title{color:var(--color-ink,#0a0f05);font-family:var(--font-display,'Fredoka',sans-serif);font-size:15px;font-weight:600}.ds-row-sub{color:var(--color-ink-soft,#59594b);font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;font-weight:700}"
+    },
+    {
+      "name": "Category Chip",
+      "kind": "chip",
+      "refersTo": "chip-category",
+      "description": "28px olive square that labels a card category; not interactive.",
+      "html": "<span class='ds-cat-chip'><svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg></span>",
+      "css": ".ds-cat-chip{display:grid;place-items:center;width:28px;height:28px;border:2px solid var(--color-ink,#0a0f05);border-radius:8px;background-color:var(--color-shadow,#304a1e);color:var(--color-panel,#d9d1bd)}"
+    },
+    {
+      "name": "Now-playing Progress",
+      "kind": "custom",
+      "description": "Ink track with a rose fill and tabular time labels.",
+      "html": "<div class='ds-progress'><span class='ds-time'>1:24</span><span class='ds-track'><span class='ds-fill' style='width:42%'></span></span><span class='ds-time'>3:18</span></div>",
+      "css": ".ds-progress{display:flex;align-items:center;gap:10px;width:100%}.ds-track{flex:1;height:7px;border:1.5px solid var(--color-ink,#0a0f05);border-radius:999px;background-color:var(--color-ink,#0a0f05);overflow:hidden}.ds-fill{display:block;height:100%;border-radius:999px;background-color:var(--color-coral,#dd709f)}.ds-time{min-width:34px;color:var(--color-ink-soft,#59594b);font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}.ds-time:last-child{text-align:right}"
+    },
+    {
+      "name": "Podium Card",
+      "kind": "card",
+      "description": "Top-three stats card: deep-sand sticker, medal overlapping the top edge; first place lifts and gains shadow, second and third tilt.",
+      "html": "<div class='ds-podium ds-first'><span class='ds-medal'>1</span><span class='ds-podium-avatar'></span><span class='ds-podium-title'>Artist name</span></div>",
+      "css": ".ds-podium{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;min-width:190px;padding:32px 16px 20px;border-radius:18px;border:2.5px solid var(--color-ink,#0a0f05);background-color:var(--color-paper,#cbc6b0);box-shadow:var(--sticker-4,4px 4px 0 #304a1e)}.ds-first{transform:translateY(-14px);box-shadow:var(--sticker-6,6px 6px 0 #304a1e)}.ds-medal{position:absolute;top:-16px;left:50%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:2.5px solid var(--color-ink,#0a0f05);background-color:var(--color-sunflower,#c2a76a);color:var(--color-ink,#0a0f05);font-family:var(--font-display,'Fredoka',sans-serif);font-weight:700;font-size:14px}.ds-podium-avatar{width:92px;height:92px;border-radius:50%;border:2.5px solid var(--color-ink,#0a0f05);background-color:var(--color-panel,#d9d1bd)}.ds-podium-title{color:var(--color-ink,#0a0f05);font-family:var(--font-display,'Fredoka',sans-serif);font-size:17px;font-weight:600;line-height:1.2}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Matcha Scrapbook",
+    "overview": "Spotify Stats reads like a personal listening scrapbook: sand-colored paper cards pinned onto a near-black page, outlined in ink, and lifted with hard olive sticker shadows. The system is playful but not childish - rounded Fredoka headlines sit next to tight Nunito labels, and every card feels physically placed rather than generated. The voice is a playful print zine. Layout is dense and bento-like: a large \"now playing\" tile next to two ranked lists, all with the same paper stock, ink outline, and offset shadow. Color is deliberate and rare; rose marks live state and rank accents, olive anchors navigation, and matcha signals the single account action. The world is warm, tactile, and slightly off-register. It is a dashboard first: scanning ranks, reading names, and checking now-playing outrank decoration. The sticker treatment is the decoration, applied consistently instead of loudly.",
+    "keyCharacteristics": [
+      "Sand paper surfaces on a near-black canvas.",
+      "2.5px ink outlines on every surface, with hard offset olive shadows (no blur).",
+      "Rounded display type (Fredoka) paired with compact bold body type (Nunito).",
+      "A cream-on-dark canvas; rose used sparingly for state and rank.",
+      "Bento grid with 12 columns and deliberate empty gutters."
+    ],
+    "rules": [
+      {
+        "name": "The Sand-First Rule",
+        "body": "Content lives on sand surfaces. The dark canvas is a frame, not a place for body text; only page titles and their subtitle sit directly on it, in cream.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Rose Rule",
+        "body": "Rose appears only for live/active state, rank accents, and progress. It never becomes a button fill or a large background.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-Lavender-Text Rule",
+        "body": "Lavender is no longer a canvas text color. Use cream for headings on dark; keep lavender for categorical decoration only.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two-Voice Rule",
+        "body": "Fredoka is for nouns and numbers (titles, names, ranks, counts). Nunito is for verbs and context (labels, subtitles, settings). Do not set long sentences in Fredoka.",
+        "section": "typography"
+      },
+      {
+        "name": "The Hard-Shadow Rule",
+        "body": "Shadows are flat offsets in olive, never blurred, never translucent. If a surface has no offset shadow, it is either pressed, flat, or not a sticker.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Lift-On-Hover Rule",
+        "body": "Interactive stickers move up-left and gain shadow on hover; on press they move down-right and lose it. Nothing scales up without a corresponding shadow change.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Ink-Outline Rule",
+        "body": "If a surface is raised or interactive, it gets an ink outline. Unbordered elements are typography or separators, nothing else.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do put content on sand cards and keep the dark canvas for the frame and page title.",
+      "Do give every raised surface a 2.5px ink border and a hard olive offset shadow.",
+      "Do use rose only for live state, rank accents, and progress.",
+      "Do use Fredoka for titles/names/numbers and Nunito for labels/metadata.",
+      "Do reserve the 88px right gutter so the fixed log-out icon has an empty column.",
+      "Do keep rotations small (<=4 degrees) and flatten them on interaction or small screens."
+    ],
+    "donts": [
+      "Don't use blurred, translucent, or colored-other-than-olive drop shadows (login CTA hover ink is the only exception).",
+      "Don't set page headings on the dark canvas in lavender; use cream.",
+      "Don't fill buttons or large areas with rose.",
+      "Don't remove ink outlines from interactive stickers.",
+      "Don't mix radii outside the scale (8/12/16/18/20/24/999).",
+      "Don't set long prose in Fredoka or use uppercase for anything longer than a short label."
+    ]
+  }
+}

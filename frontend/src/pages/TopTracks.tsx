@@ -10,7 +10,6 @@ import {
     StatsList,
 } from '../assets/StatsShared';
 import type { TimeRange, StatsItem } from '../assets/StatsShared';
-import LogoutButton from '../components/LogoutButton';
 import sharedStyles from '../styles/StatsShared.module.css';
 
 function MetaLine({ children }: { children: React.ReactNode }) {
@@ -87,7 +86,6 @@ export default function TopTracks() {
 
     return (
         <StatsPageShell>
-            <LogoutButton />
             <StatsHeader
                 titlePrefix="Top"
                 highlightWord="Tracks"

@@ -1,21 +1,35 @@
 :root {
-  --color-paper: #fff6e9;
-  --color-panel: #ffffff;
-  --color-ink: #221f1a;
-  --color-ink-soft: #6e685c;
-  --color-coral: #ff6f5e;
-  --color-sunflower: #ffc845;
-  --color-mint: #3ed9a5;
-  --color-grape: #a184e8;
-  --color-sky: #5bb8f0;
-  --color-ink-14: #221f1a14;
-  --color-skeleton: #f3ecdd;
+  /* Matcha Rose palette — see palettes/matcha-rose.css */
+  --color-paper: #cbc6b0; /* darker sand — rows, avatars, tracks */
+  --color-panel: #d9d1bd; /* sand — cards, sidebar */
+  --color-ink: #0a0f05; /* near-black — canvas, borders, text */
+  --color-ink-soft: #59594b; /* muted text on sand */
+
+  /* Text on the dark canvas */
+  --color-canvas-text: #d9d1bd;
+  --color-canvas-text-soft: #cbc6b0;
+  --color-canvas-dot: rgba(217, 209, 189, 0.09);
+
+  /* Categorical accents (light fills, ink text) */
+  --color-coral: #dd709f; /* rose */
+  --color-sunflower: #c2a76a; /* warm gold */
+  --color-mint: #8fae7c; /* sage */
+  --color-grape: #ad95c9; /* lavender */
+  --color-sky: #7fa8a1; /* teal */
+  --color-matcha: #b7d09a; /* log out */
+
+  --color-ink-14: rgba(10, 15, 5, 0.08);
+  --color-skeleton: #c9c2ae;
+  --color-shadow: #304a1e;
 
   --font-display: 'Fredoka', ui-rounded, 'Segoe UI', sans-serif;
   --font-body: 'Nunito', ui-rounded, 'Segoe UI', sans-serif;
 
-  --sticker-2: 2px 2px 0 var(--color-ink);
-  --sticker-3: 3px 3px 0 var(--color-ink);
-  --sticker-4: 4px 4px 0 var(--color-ink);
-  --sticker-6: 6px 6px 0 var(--color-ink);
+  /* Empty column at the right so the fixed log-out button never covers content */
+  --logout-gutter: 88px;
+
+  --sticker-2: 2px 2px 0 var(--color-shadow);
+  --sticker-3: 3px 3px 0 var(--color-shadow);
+  --sticker-4: 4px 4px 0 var(--color-shadow);
+  --sticker-6: 6px 6px 0 var(--color-shadow);
 }

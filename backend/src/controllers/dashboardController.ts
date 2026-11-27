@@ -39,6 +39,8 @@ export const getDashboardData = async (req: Request, res: Response) => {
         res.json({
             artists: artistsSnapshot?.artists.slice(0, 3) || [],
             tracks: tracksSnapshot?.tracks.slice(0, 3) || [],
+            artistsUpdatedAt: artistsSnapshot?.createdAt ?? null,
+            tracksUpdatedAt: tracksSnapshot?.createdAt ?? null,
         });
     } catch (error) {
         console.error('Error fetching dashboard data:', error);
